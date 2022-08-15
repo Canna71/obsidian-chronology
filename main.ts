@@ -30,7 +30,7 @@ export default class ChronologyPlugin extends Plugin {
 		// Perform additional things with the ribbon
 		ribbonIconEl.addClass('my-plugin-ribbon-class');
 
-
+		this.activateView();	
 	}
 
 	onunload() {

@@ -6,3 +6,30 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.chronology-calendar-box {
+	font-size: smaller;
+	max-width: 20em;
+}
+.chronology-days-grid {
+	display: grid;
+	grid-template-columns: repeat(8, 1fr);
+	grid-auto-rows: 1fr;
+	grid-gap: 0px;
+	
+}
+
+.chronology-days-grid div {
+	height: 32px;
+	width: 32px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.chronology-calendar-week-wrapper {
+	white-space: no-wrap;
+}
+
+.chronology-other-month {
+	opacity: 50%;
+}
