@@ -31,6 +31,8 @@ If your plugin does not need CSS, delete this file.
 	text-align: center;
 }
 
+
+
 .chronology-calendar-weeknumber {
 	color: var(--text-faint);
 	font-weight: bold;	
@@ -54,6 +56,11 @@ If your plugin does not need CSS, delete this file.
 .chronology-calendar-selectable.selected {
 	outline-style: solid;
 	outline-color: var(--interactive-accent-hover);
+}
+
+.chronology-calendar-week-row.selected {
+    outline-style: solid;
+	outline-color: var(--interactive-accent-hover);   
 }
 
 .chronology-cell-month {

@@ -14,12 +14,12 @@ export const CalendarContainer = ({date}:CalendarContainerProps) => {
 
 	const timeIndex = React.useContext(TimeIndexContext);
 	const [current, setDate] = React.useState(date);
-
     
     const notes = timeIndex.getNotesForCalendarItem(current);
 
 	const handleChange = React.useCallback(
 		(value:CalendarItem) => {
+            console.log("onchange")
 			setDate(value);
 		},
 		[setDate],

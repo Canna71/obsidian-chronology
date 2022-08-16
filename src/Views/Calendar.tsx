@@ -45,9 +45,9 @@ const Cell = ({ value,  current, onChange }: CalendarCellProps) => {
 	if (value.type === CalendarItemType.Week) {
 		const classes = ["chronology-calendar-weeknumber", "chronology-calendar-selectable"]
 
-		if (current.type === CalendarItemType.Week && currendDate.week() === itemDate.week()) {
-			classes.push("selected")
-		}
+		// if (current.type === CalendarItemType.Week && currendDate.week() === itemDate.week()) {
+		// 	classes.push("selected")
+		// }
 		return <td key={`week-${value}`} className={classes.join(" ")} onClick={handleChange} >{itemDate.week()}</td>
 	} else {
 		const classes = ["chronology-calendar-day", "chronology-calendar-selectable"]
@@ -85,9 +85,14 @@ const Week = ({ weekNumber, current, onChange }: {weekNumber: number, current: C
 		weekRange.push(new CalendarItem(i.clone(),CalendarItemType.Day ) );
 	}
 
+    const weekClasses = ["chronology-calendar-week-row"];
+
+    if(current.type === CalendarItemType.Week && current.date.week() === weekNumber){
+        weekClasses.push("selected");
+    }
 
 	return (
-		<tr className="chronology-calendar-week-row">
+		<tr className={weekClasses.join(" ")}>
 			{weekRange.map(d => 
                 <Cell 
                     key={d.toString()} 
