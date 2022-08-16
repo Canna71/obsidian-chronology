@@ -7,10 +7,14 @@ If your plugin does not need CSS, delete this file.
 
 */
 
-.chronology-cell-other-month {
+.chronology-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.chronology-cell-other-month {
+
 }
 
 .chronology-calendar-box {
