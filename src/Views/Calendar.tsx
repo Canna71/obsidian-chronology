@@ -15,6 +15,8 @@ export interface CalendarViewProps {
 	onChange: (sel: CalendarItem)=>void;
 }
 
+//TODO: refactor CalendarItem into a class?
+
 export type CalendarItem = {
 	date: moment.Moment;
 	type: CalendarItemType;
@@ -131,6 +133,30 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 		onChange(value);
 	},[onChange]);
 
+	const selectMonth = useCallback(()=>{
+		onChange({
+			date: currentDate,
+			type: CalendarItemType.Month
+		})
+	},[monthName]);
+
+	const selectYear = useCallback(()=>{
+		onChange({
+			date: currentDate,
+			type: CalendarItemType.Year
+		})
+	},[monthName]);
+
+	const monthClasses = ["chronology-calendar-selectable"];
+	if(current.type === CalendarItemType.Month) {
+		monthClasses.push("selected");
+	}
+
+	const yearClasses = ["chronology-calendar-selectable"];
+	if(current.type === CalendarItemType.Year) {
+		yearClasses.push("selected");
+	}
+
 	return (
 		<div className="chronology-calendar-box">
 			<table className="chronology-calendar-grid">
@@ -138,10 +164,11 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 				<thead>
 					<tr>
 						<th colSpan={8}>
-							<span className="chronology-calendar-selectable">
+							<span className={monthClasses.join(" ")} onClick={selectMonth}>
 								{monthName}
 							</span>
-							<span className="chronology-calendar-selectable">
+							&nbsp;
+							<span className={yearClasses.join(" ")} onClick={selectYear} >
 								{yearName}
 							</span>
 						</th>
@@ -154,7 +181,7 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 					{monthRange.map(week => <Week key={week} weekNumber={week} current={current}  onChange={handleChange} />)}
 				</tbody>
 			</table>
-
+ 
 
 		</div>
 	)
