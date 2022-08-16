@@ -4,71 +4,71 @@ import { useCallback } from "react";
 import { TimeIndexContext } from "./CalendarView";
 
 
-export enum CalendarSelectionMode {
+export enum CalendarItemType {
 	Day,
 	Week,
 	Month,
 	Year
 }
 export interface CalendarViewProps {
-	date: moment.Moment;
-	mode: CalendarSelectionMode;
-	onChange: (sel: DayOrWeek | string)=>void;
+	current: CalendarItem;
+	onChange: (sel: CalendarItem)=>void;
 }
 
-
-
-
-type DayOrWeek = number | moment.Moment;
+export type CalendarItem = {
+	date: moment.Moment;
+	type: CalendarItemType;
+}
 
 
 interface CalendarCellProps {
-	dayOrWeek: DayOrWeek;
-	month: number;
-	date: moment.Moment;
-	mode: CalendarSelectionMode;
-	weekNumber: number;
-	onChange: (dow: DayOrWeek) => void
+	value: CalendarItem;
+	current: CalendarItem;
+	onChange: (value: CalendarItem) => void
 }
 
-const Cell = ({ dayOrWeek, month, date, mode, onChange }: CalendarCellProps) => {
+const Cell = ({ value,  current, onChange }: CalendarCellProps) => {
 
 	const timeIndex = React.useContext(TimeIndexContext);
 
 	const handleChange = useCallback(
 		() => {
-			onChange(dayOrWeek);
+			onChange(value);
 		},
-		[dayOrWeek],
+		[value],
 	)
 
-
+	
+	const itemDate = value.date;
+	const currendDate = current.date;
+	const month = currendDate.month();
 	// let selected = false;
 
-	if (typeof dayOrWeek === "number") {
+	if (value.type === CalendarItemType.Week) {
 		const classes = ["chronology-calendar-weeknumber", "chronology-calendar-selectable"]
-		if (mode === CalendarSelectionMode.Week && date.week() === dayOrWeek) {
+
+		if (current.type === CalendarItemType.Week && currendDate.week() === itemDate.week()) {
 			classes.push("selected")
 		}
-		return <td key={`week-${dayOrWeek}`} className={classes.join(" ")} onClick={handleChange} >{dayOrWeek}</td>
+		return <td key={`week-${value}`} className={classes.join(" ")} onClick={handleChange} >{itemDate.week()}</td>
 	} else {
 		const classes = ["chronology-calendar-day", "chronology-calendar-selectable"]
-		classes.push(month === dayOrWeek.month() ? "chronology-current-month" : "chronology-other-month");
+		classes.push(month === itemDate.month() ? "chronology-current-month" : "chronology-other-month");
 
-		if (dayOrWeek.isSame(moment(), "day")) classes.push("chronology-calendar-today");
+		if (itemDate.isSame(moment(), "day")) classes.push("chronology-calendar-today");
 
-		if (mode === CalendarSelectionMode.Day && dayOrWeek.isSame(date, "day")) {
+		if (current.type === CalendarItemType.Day && itemDate.isSame(currendDate, "day")) {
 			classes.push("selected")
 		}
 
-		const heatLevel = timeIndex.getHeatForDate(dayOrWeek.format("YYYY-MM-DD"));
+		const heatLevel = timeIndex.getHeatForDate(itemDate.format("YYYY-MM-DD"));
 		const percentage = Math.max(0, Math.min(Math.ceil(heatLevel * 100), 100));
 		const height = `${percentage}%`;
 
 		return (
-			<td key={dayOrWeek.dayOfYear()} className={classes.join(" ")} onClick={handleChange}>
+			<td key={itemDate.dayOfYear()} className={classes.join(" ")} onClick={handleChange}>
 				<div className="chronology-calendar-heat-background" style={{ height }}></div>
-				<span>{dayOrWeek.date()}</span>
+				<span>{itemDate.date()}</span>
 
 			</td>
 		)
@@ -76,36 +76,44 @@ const Cell = ({ dayOrWeek, month, date, mode, onChange }: CalendarCellProps) => 
 
 }
 
-const Week = ({ weekNumber, month, date, mode, onChange }: CalendarCellProps) => {
+const Week = ({ weekNumber, current, onChange }: {weekNumber: number, current: CalendarItem, onChange: (value: CalendarItem) => void}) => {
 
 	const weekStart = moment().weekday(0).format("dddd");
 	const firstDayOfWeek = moment().day(weekStart).week(weekNumber);
 	const lastDayOfWeek = moment().day(weekStart).week(weekNumber).endOf("week");
 
-	const weekRange: DayOrWeek[] = [weekNumber];
+	const weekRange: CalendarItem[] = [{
+		date: firstDayOfWeek.clone(),
+		type: CalendarItemType.Week
+	}];
 	for (let i = firstDayOfWeek.clone(); i.isBefore(lastDayOfWeek); i = i.add(1, "days")) {
-		weekRange.push(i.clone());
+		weekRange.push({
+			date: i.clone(),
+			type: CalendarItemType.Day
+		});
 	}
 
 
 	return (
 		<tr className="chronology-calendar-week-row">
-			{weekRange.map(d => <Cell key={d.toString()} dayOrWeek={d} month={month} date={date} mode={mode} onChange={onChange} weekNumber={weekNumber} />
+			{weekRange.map(d => <Cell key={d.type.toString() + d.date.toString()} value={d} current={current} onChange={onChange} />
 
 			)}
 		</tr>
 	)
-}
+} 
+ 
 
 
+export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
-export const Calendar = ({ date, mode, onChange }: CalendarViewProps) => {
+	const currentDate = current.date;
+
 	const weekStart = moment().weekday(0).format("dddd");
-	const firstOfMonth = moment(date).startOf("month");
-	const endOfMonth = moment(date).endOf("month");
-	const monthName = moment(date).format("MMMM");
-	const yearName = moment(date).format("YYYY");
-	const month = moment(date).month();
+	const firstOfMonth = currentDate.clone().startOf("month");
+	const endOfMonth = currentDate.clone().endOf("month");
+	const monthName = currentDate.format("MMMM");
+	const yearName = currentDate.format("YYYY");
 	const startWeek = firstOfMonth.week();
 	const endWeek = endOfMonth.week();
 	const firstDayOGrid = moment().day(weekStart).week(startWeek);
@@ -119,8 +127,8 @@ export const Calendar = ({ date, mode, onChange }: CalendarViewProps) => {
 
 	const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek);
 
-	const handleChange = useCallback((e:any)=>{
-		onChange(e);
+	const handleChange = useCallback((value:CalendarItem)=>{
+		onChange(value);
 	},[onChange]);
 
 	return (
@@ -143,7 +151,7 @@ export const Calendar = ({ date, mode, onChange }: CalendarViewProps) => {
 					</tr>
 				</thead>
 				<tbody>
-					{monthRange.map(week => <Week key={week} weekNumber={week} month={month} date={date} mode={mode} dayOrWeek={0} onChange={handleChange} />)}
+					{monthRange.map(week => <Week key={week} weekNumber={week} current={current}  onChange={handleChange} />)}
 				</tbody>
 			</table>
 

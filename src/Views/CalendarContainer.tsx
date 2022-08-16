@@ -1,20 +1,22 @@
+
 import * as React from "react";
 
-import { Calendar, CalendarSelectionMode } from "./Calendar";
+import { Calendar, CalendarItem } from "./Calendar";
 
-export interface CalendarViewProps {
-	date: moment.Moment;
+export interface CalendarContainerProps {
+	date: CalendarItem;
 }
 
 
 
-export const CalendarContainer = (props: CalendarViewProps) => {
+export const CalendarContainer = ({date}:CalendarContainerProps) => {
 
-	const [date, setDate] = React.useState(moment());
+
+	const [current, setDate] = React.useState(date);
 
 	const handleChange = React.useCallback(
-		(e) => {
-			setDate(e);
+		(value:CalendarItem) => {
+			setDate(value);
 		},
 		[setDate],
 	)
@@ -22,7 +24,7 @@ export const CalendarContainer = (props: CalendarViewProps) => {
 
 	return (
 		<div className="chronology-container">
-			<Calendar date={date} onChange={handleChange} mode={CalendarSelectionMode.Day} />
+			<Calendar current={current} onChange={handleChange}  />
 		</div>
 	)
 }
