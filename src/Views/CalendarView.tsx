@@ -3,7 +3,7 @@ import moment from "moment";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
-import { ITimeIndex, MockTimeIndex } from "src/TimeIndex";
+import { ITimeIndex, MockTimeIndex, TimeIndex } from "src/TimeIndex";
 import { CalendarItemType } from "./Calendar";
 import { CalendarContainer } from "./CalendarContainer";
 export const CALENDAR_VIEW = "chronology-calendar-view";
@@ -31,6 +31,7 @@ export class CalendarView extends ItemView {
 				type: CalendarItemType.Day
 			}
 		};
+
 	}
 
 	getViewType() {
@@ -46,7 +47,7 @@ export class CalendarView extends ItemView {
 	render() {
 		this.root.render(
 			<React.StrictMode>
-				<TimeIndexContext.Provider value={new MockTimeIndex()}>
+				<TimeIndexContext.Provider value={new TimeIndex(this.app)}>
 					<CalendarContainer {...this.state} />
 				</TimeIndexContext.Provider>
 			</React.StrictMode>
