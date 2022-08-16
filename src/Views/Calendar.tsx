@@ -76,9 +76,12 @@ export const Calendar = ({ date }: CalendarViewProps) => {
 
 	return (
 		<div className="chronology-calendar-box">
+			{/* <table>
+				<thead></thead>
+			</table> */}
 			<div>{monthName} {yearName}</div>
 			<div className="chronology-days-grid">
-				{monthRange.map((day,i) => <GridCell key={day.toString()} {...{day, month}} />
+				{monthRange.map((day,i) => <div  key={day.toString()}  className="chronology-days-gridcell"><GridCell{...{day, month}} /></div>
 				)}
 			</div>
 		</div>
