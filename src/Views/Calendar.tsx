@@ -1,15 +1,11 @@
-import moment from "moment";
+import { moment } from "obsidian";
 import * as React from "react";
 import { useCallback } from "react";
+import { CalendarItem, CalendarItemType } from "src/CalendarType";
 import { TimeIndexContext } from "./CalendarView";
 
 
-export enum CalendarItemType {
-	Day,
-	Week,
-	Month,
-	Year
-}
+
 export interface CalendarViewProps {
 	current: CalendarItem;
 	onChange: (sel: CalendarItem)=>void;
@@ -21,22 +17,7 @@ export interface CalendarViewProps {
 // 	type: CalendarItemType;
 // }
 
-export class CalendarItem {
-	date: moment.Moment;
-	type: CalendarItemType;
 
-    /**
-     *
-     */
-    constructor(date: moment.Moment, type=CalendarItemType.Day) {
-        this.date=date;
-        this.type=type;
-    }
-
-    toString(){
-        return CalendarItemType[this.type]+this.date.toString();
-    }
-}
 
 interface CalendarCellProps {
 	value: CalendarItem;

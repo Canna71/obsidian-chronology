@@ -1,7 +1,7 @@
 
-import { CalendarItem, CalendarItemType } from './Views/Calendar';
-import moment from "moment";
-import { App, TFile, } from "obsidian";
+// import { moment } from "obsidian";
+import { App, TFile, moment} from "obsidian";
+import { CalendarItem, CalendarItemType } from "./CalendarType";
 
 export interface ITimeIndex {
     getHeatForDate(date: string): number;

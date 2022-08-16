@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import moment from "moment";
+import { moment } from "obsidian";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
+import { CalendarItemType } from "src/CalendarType";
 import { ITimeIndex, MockTimeIndex, TimeIndex } from "src/TimeIndex";
-import { CalendarItemType } from "./Calendar";
 import { CalendarContainer } from "./CalendarContainer";
 export const CALENDAR_VIEW = "chronology-calendar-view";
 

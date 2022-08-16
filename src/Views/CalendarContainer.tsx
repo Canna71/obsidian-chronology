@@ -1,6 +1,7 @@
 
 import * as React from "react";
-import { Calendar, CalendarItem } from "./Calendar";
+import { CalendarItem } from "src/CalendarType";
+import { Calendar } from "./Calendar";
 import { TimeIndexContext } from "./CalendarView";
 
 export interface CalendarContainerProps {

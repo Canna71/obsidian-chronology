@@ -17,6 +17,7 @@ esbuild.build({
 	},
 	entryPoints: ['main.ts'],
 	bundle: true,
+    minify: prod,
 	external: [
 		'obsidian',
 		'electron',
