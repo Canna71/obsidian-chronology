@@ -9,13 +9,13 @@ export interface CalendarContainerProps {
 
 
 
-export const CalendarContainer = ({date}:CalendarContainerProps) => {
+export const CalendarContainer = ({date}:CalendarContainerProps) => { 
 
 	const timeIndex = React.useContext(TimeIndexContext);
 	const [current, setDate] = React.useState(date);
 
     
-    const notes = timeIndex.getNotesCalendarItem(current);
+    const notes = timeIndex.getNotesForCalendarItem(current);
 
 	const handleChange = React.useCallback(
 		(value:CalendarItem) => {
@@ -29,7 +29,7 @@ export const CalendarContainer = ({date}:CalendarContainerProps) => {
 			<Calendar current={current} onChange={handleChange}  />
 
             <ul>
-                {notes.map(note=><li key={note.path}>{note.name}</li>)}
+                {notes.map(note=><li key={note.note.path}>{note.note.basename}</li>)}
             </ul>
 
 		</div>

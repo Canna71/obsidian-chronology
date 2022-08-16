@@ -1,10 +1,29 @@
+
 import { CalendarItem, CalendarItemType } from './Views/Calendar';
 import moment from "moment";
 import { App, TFile, } from "obsidian";
 
 export interface ITimeIndex {
     getHeatForDate(date: string): number;
-    getNotesCalendarItem(item: CalendarItem): TFile[];
+    getNotesForCalendarItem(item: CalendarItem): TimeResult[];
+}
+
+export enum DateAttribute {
+    Created,
+    Modified,
+    Both
+}
+
+const AttributesMatches = {
+    "truefalse": DateAttribute.Created,
+    "falsetrue": DateAttribute.Modified,
+    "truetrue": DateAttribute.Both,
+    "falsefalse": -1
+}
+
+export interface TimeResult {
+    note: TFile;
+    attribute: DateAttribute;
 }
 
 export class TimeIndex implements ITimeIndex {
@@ -15,7 +34,7 @@ export class TimeIndex implements ITimeIndex {
         this.app = app;
     }
 
-    getNotesCalendarItem(item: CalendarItem): TFile[] {
+    getNotesForCalendarItem(item: CalendarItem): TimeResult[] {
         const allNotes = this.app.vault.getMarkdownFiles();
         let fromTime: moment.Moment, 
             toTime: moment.Moment;
@@ -42,12 +61,22 @@ export class TimeIndex implements ITimeIndex {
                 break;
         }
 
-        const notes = allNotes.filter(note => {
+        const notes = allNotes.reduce<TimeResult[]>((acc,note) => {
             const createdTime = moment(note.stat.ctime);
             const modifiedTime = moment(note.stat.mtime);
-            return createdTime.isBetween(fromTime,toTime)
-                || modifiedTime.isBetween(fromTime, toTime);
-        })
+
+            const matchCreated = createdTime.isBetween(fromTime,toTime);
+            const matchModified = modifiedTime.isBetween(fromTime, toTime);
+            if(matchCreated || matchModified){
+                acc.push({
+                    note,
+                    attribute: AttributesMatches[`${matchCreated}${matchModified}`],
+                });
+            }
+            return acc; 
+        },[]);
+
+        
 
         return notes;
     }
@@ -60,7 +89,7 @@ export class TimeIndex implements ITimeIndex {
 
 
 export class MockTimeIndex implements ITimeIndex {
-    getNotesCalendarItem(item: CalendarItem): TFile[] {
+    getNotesForCalendarItem(item: CalendarItem): TFile[] {
 
         return [];
     }
