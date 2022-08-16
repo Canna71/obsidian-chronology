@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CalendarView, CALENDAR_VIEW } from './src/Views/CalendarView';
-import { App, Editor, MarkdownView, Modal, Notice, Plugin } from 'obsidian';
+import { App, Modal, Plugin } from 'obsidian';
 import { ChronologySettingTab } from 'src/ChronologySettingTab';
 
 // Remember to rename these classes and interfaces!
@@ -59,20 +60,6 @@ export default class ChronologyPlugin extends Plugin {
 	}
 }
 
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
 
-	onOpen() {
-		const { contentEl } = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		const { contentEl } = this;
-		contentEl.empty();
-	}
-}
 
 

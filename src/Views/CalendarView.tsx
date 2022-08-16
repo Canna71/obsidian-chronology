@@ -2,13 +2,18 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
+import { ITimeIndex, MockTimeIndex } from "src/TimeIndex";
 import { CalendarContainer } from "./CalendarContainer";
 export const CALENDAR_VIEW = "chronology-calendar-view";
+
+
+export const TimeIndexContext = React.createContext<ITimeIndex>(new MockTimeIndex());
 
 export class CalendarView extends ItemView {
 
 	root: Root;
 	state: {};
+
 
 
 	constructor(leaf: WorkspaceLeaf) {
@@ -29,7 +34,9 @@ export class CalendarView extends ItemView {
 	render() {
 		this.root.render(
 			<React.StrictMode>
-				<CalendarContainer date={""} {...this.state} />
+				<TimeIndexContext.Provider value={new MockTimeIndex()}>
+					<CalendarContainer date={""} {...this.state} />
+				</TimeIndexContext.Provider>
 			</React.StrictMode>
 		);
 	}

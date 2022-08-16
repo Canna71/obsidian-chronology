@@ -36,21 +36,46 @@ If your plugin does not need CSS, delete this file.
 	font-weight: bold;	
 }
 
-.chronology-calendar-day {
 
+
+.chronology-calendar-day {
+	position: relative;
+}
+
+.chronology-calendar-day:hover {
+	/* text-decoration: underline; */
+
+}
+
+.chronology-calendar-selectable:hover {
+	text-decoration: underline;
+}
+
+.chronology-calendar-selectable.selected {
+	outline-style: solid;
+	outline-color: var(--interactive-accent-hover);
 }
 
 .chronology-cell-month {
 
 }
 
-.chronology-calendar-today {
-	outline-style:  solid;
-	
-	outline-color:  var(--interactive-accent);
+.chronology-calendar-heat-background {
+	position:absolute;
+	bottom: 0px;
+	background-color: var(--background-modifier-border);
+	width: 100%;
+	z-index: -1;
 }
 
+.chronology-calendar-today {
+	/* outline-style:  solid;
+	outline-color:  var(--interactive-accent); */
 
+	font-weight: 800;
+}
+
+ 
 .chronology-cell-other-months {
 	color: var(--text-faint);
 }
