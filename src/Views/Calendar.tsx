@@ -1,43 +1,74 @@
 import moment from "moment";
 import * as React from "react";
+import { useCallback } from "react";
 import { TimeIndexContext } from "./CalendarView";
 
+
+export enum CalendarSelectionMode {
+	Day,
+	Week,
+	Month,
+	Year
+}
 export interface CalendarViewProps {
-	date: string;
+	date: moment.Moment;
+	mode: CalendarSelectionMode;
+	onChange: (sel: DayOrWeek | string)=>void;
 }
 
 
 
-/*
 
-var weeknumber = moment("12-25-1995", "MM-DD-YYYY").week();
-    
-const startOfMonth = moment().startOf('month').format('YYYY-MM-DD hh:mm');
-const endOfMonth   = moment().endOf('month').format('YYYY-MM-DD hh:mm');
-*/
-
-type WeekOrDay = number | moment.Moment;
-
-const Cell = ({ data: weekOrDay, month }: { data: WeekOrDay, month: number }) => {
-
-	const timeIndex = React.useContext(TimeIndexContext)
+type DayOrWeek = number | moment.Moment;
 
 
-	if (typeof weekOrDay === "number") {
-		return <td key={`week-${weekOrDay}`} className="chronology-calendar-weeknumber chronology-calendar-selectable">{weekOrDay}</td>
+interface CalendarCellProps {
+	dayOrWeek: DayOrWeek;
+	month: number;
+	date: moment.Moment;
+	mode: CalendarSelectionMode;
+	weekNumber: number;
+	onChange: (dow: DayOrWeek) => void
+}
+
+const Cell = ({ dayOrWeek, month, date, mode, onChange }: CalendarCellProps) => {
+
+	const timeIndex = React.useContext(TimeIndexContext);
+
+	const handleChange = useCallback(
+		() => {
+			onChange(dayOrWeek);
+		},
+		[dayOrWeek],
+	)
+
+
+	// let selected = false;
+
+	if (typeof dayOrWeek === "number") {
+		const classes = ["chronology-calendar-weeknumber", "chronology-calendar-selectable"]
+		if (mode === CalendarSelectionMode.Week && date.week() === dayOrWeek) {
+			classes.push("selected")
+		}
+		return <td key={`week-${dayOrWeek}`} className={classes.join(" ")} onClick={handleChange} >{dayOrWeek}</td>
 	} else {
 		const classes = ["chronology-calendar-day", "chronology-calendar-selectable"]
-		classes.push(month === weekOrDay.month() ? "chronology-current-month" : "chronology-other-month");
-		if (weekOrDay.isSame(moment(), "day")) classes.push("chronology-calendar-today");
+		classes.push(month === dayOrWeek.month() ? "chronology-current-month" : "chronology-other-month");
 
-		const heatLevel = timeIndex.getHeatForDate(weekOrDay.format("YYYY-MM-DD"));
+		if (dayOrWeek.isSame(moment(), "day")) classes.push("chronology-calendar-today");
+
+		if (mode === CalendarSelectionMode.Day && dayOrWeek.isSame(date, "day")) {
+			classes.push("selected")
+		}
+
+		const heatLevel = timeIndex.getHeatForDate(dayOrWeek.format("YYYY-MM-DD"));
 		const percentage = Math.max(0, Math.min(Math.ceil(heatLevel * 100), 100));
 		const height = `${percentage}%`;
 
 		return (
-			<td key={weekOrDay.dayOfYear()} className={classes.join(" ")}>
+			<td key={dayOrWeek.dayOfYear()} className={classes.join(" ")} onClick={handleChange}>
 				<div className="chronology-calendar-heat-background" style={{ height }}></div>
-				<span>{weekOrDay.date()}</span>
+				<span>{dayOrWeek.date()}</span>
 
 			</td>
 		)
@@ -45,43 +76,30 @@ const Cell = ({ data: weekOrDay, month }: { data: WeekOrDay, month: number }) =>
 
 }
 
-const Week = ({ weekNumber, month }: { weekNumber: number, month: number }) => {
+const Week = ({ weekNumber, month, date, mode, onChange }: CalendarCellProps) => {
 
 	const weekStart = moment().weekday(0).format("dddd");
 	const firstDayOfWeek = moment().day(weekStart).week(weekNumber);
 	const lastDayOfWeek = moment().day(weekStart).week(weekNumber).endOf("week");
 
-	const weekRange: WeekOrDay[] = [weekNumber];
+	const weekRange: DayOrWeek[] = [weekNumber];
 	for (let i = firstDayOfWeek.clone(); i.isBefore(lastDayOfWeek); i = i.add(1, "days")) {
 		weekRange.push(i.clone());
 	}
-	// weekRange.push(lastDayOfWeek); 
 
-	// console.log(weekRange);
 
 	return (
 		<tr className="chronology-calendar-week-row">
-			{weekRange.map((date, i) => <Cell key={date.toString()} data={date} month={month} />
+			{weekRange.map(d => <Cell key={d.toString()} dayOrWeek={d} month={month} date={date} mode={mode} onChange={onChange} weekNumber={weekNumber} />
 
 			)}
 		</tr>
 	)
 }
 
-// const GridCell = ({ day, month }: { day: number | moment.Moment | string, month: number }) => {
-// 	if (typeof day === "number") {
-// 		return <div key={day}>{day}</div>
-// 	} else if (typeof day === "string") {
-// 		return <div key={day}>{day}</div>
-// 	} else {
-// 		const classes = [".chronology-calendar-day"]
-// 		classes.push(month === day.month() ? "chronology-current-month" : "chronology-other-month");
-// 		if (day.isSame(moment(), "day")) classes.push("chronology-calendar-today");
-// 		return <div className={classes.join(" ")} key={day.dayOfYear()}>{day.date()}</div>
-// 	}
-// }
 
-export const Calendar = ({ date }: CalendarViewProps) => {
+
+export const Calendar = ({ date, mode, onChange }: CalendarViewProps) => {
 	const weekStart = moment().weekday(0).format("dddd");
 	const firstOfMonth = moment(date).startOf("month");
 	const endOfMonth = moment(date).endOf("month");
@@ -101,20 +119,9 @@ export const Calendar = ({ date }: CalendarViewProps) => {
 
 	const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek);
 
-	// This is the version with one item per cell:
-
-	// const monthRange:(number | moment.Moment | string)[] = [""];
-	// const endofFirstFeek = firstDayOGrid.clone().endOf("week")
-	// for (let d=firstDayOGrid.clone();d.isBefore(endofFirstFeek);d = d.add(1, "days")){
-	// 	monthRange.push(d.format("dd"));  
-	// }
-
-	// for (let d = firstDayOGrid.clone(), week = startWeek, n = 0; d.isBefore(lastDayOfGrid); d = d.add(1, "days")) {
-	// 	if ((n++ % 7) === 0) monthRange.push(week++);
-	// 	monthRange.push(d.clone());
-	// }
-
-	// console.log(monthRange);
+	const handleChange = useCallback((e:any)=>{
+		onChange(e);
+	},[onChange]);
 
 	return (
 		<div className="chronology-calendar-box">
@@ -136,14 +143,11 @@ export const Calendar = ({ date }: CalendarViewProps) => {
 					</tr>
 				</thead>
 				<tbody>
-					{monthRange.map(week => <Week key={week} weekNumber={week} month={month} />)}
+					{monthRange.map(week => <Week key={week} weekNumber={week} month={month} date={date} mode={mode} dayOrWeek={0} onChange={handleChange} />)}
 				</tbody>
 			</table>
 
-			{/* <div className="chronology-days-grid">
-				{monthRange.map((day,i) => <div  key={day.toString()}  className="chronology-days-gridcell"><GridCell{...{day, month}} /></div>
-				)}
-			</div> */}
+
 		</div>
 	)
 }
