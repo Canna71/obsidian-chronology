@@ -3,7 +3,7 @@ import * as React from "react";
 import { CalendarItem } from "src/CalendarType";
 import { Calendar } from "./Calendar";
 import { TimeIndexContext } from "./CalendarView";
-
+import { TimeLine } from "./TimeLine"
 export interface CalendarContainerProps {
 	date: CalendarItem;
 }
@@ -29,9 +29,7 @@ export const CalendarContainer = ({date}:CalendarContainerProps) => {
 		<div className="chronology-container">
 			<Calendar current={current} onChange={handleChange}  />
 
-            <ul>
-                {notes.map(note=><li key={note.note.path}>{note.note.basename}</li>)}
-            </ul>
+            <TimeLine calItem={current} notes={notes} />
 
 		</div>
 	)
