@@ -15,13 +15,28 @@ export interface CalendarViewProps {
 	onChange: (sel: CalendarItem)=>void;
 }
 
-//TODO: refactor CalendarItem into a class?
 
-export type CalendarItem = {
+// export type CalendarItem = {
+// 	date: moment.Moment;
+// 	type: CalendarItemType;
+// }
+
+export class CalendarItem {
 	date: moment.Moment;
 	type: CalendarItemType;
-}
 
+    /**
+     *
+     */
+    constructor(date: moment.Moment, type=CalendarItemType.Day) {
+        this.date=date;
+        this.type=type;
+    }
+
+    toString(){
+        return CalendarItemType[this.type]+this.date.toString();
+    }
+}
 
 interface CalendarCellProps {
 	value: CalendarItem;
@@ -84,21 +99,20 @@ const Week = ({ weekNumber, current, onChange }: {weekNumber: number, current: C
 	const firstDayOfWeek = moment().day(weekStart).week(weekNumber);
 	const lastDayOfWeek = moment().day(weekStart).week(weekNumber).endOf("week");
 
-	const weekRange: CalendarItem[] = [{
-		date: firstDayOfWeek.clone(),
-		type: CalendarItemType.Week
-	}];
+	const weekRange: CalendarItem[] = [new CalendarItem(firstDayOfWeek.clone(), CalendarItemType.Week)];
 	for (let i = firstDayOfWeek.clone(); i.isBefore(lastDayOfWeek); i = i.add(1, "days")) {
-		weekRange.push({
-			date: i.clone(),
-			type: CalendarItemType.Day
-		});
+		weekRange.push(new CalendarItem(i.clone(),CalendarItemType.Day ) );
 	}
 
 
 	return (
 		<tr className="chronology-calendar-week-row">
-			{weekRange.map(d => <Cell key={d.type.toString() + d.date.toString()} value={d} current={current} onChange={onChange} />
+			{weekRange.map(d => 
+                <Cell 
+                    key={d.toString()} 
+                    value={d} 
+                    current={current} 
+                    onChange={onChange} />
 
 			)}
 		</tr>
@@ -134,17 +148,11 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 	},[onChange]);
 
 	const selectMonth = useCallback(()=>{
-		onChange({
-			date: currentDate,
-			type: CalendarItemType.Month
-		})
+		onChange(new CalendarItem(currentDate,CalendarItemType.Month));
 	},[monthName]);
 
 	const selectYear = useCallback(()=>{
-		onChange({
-			date: currentDate,
-			type: CalendarItemType.Year
-		})
+		onChange(new CalendarItem(currentDate,CalendarItemType.Year));
 	},[monthName]);
 
 	const monthClasses = ["chronology-calendar-selectable"];

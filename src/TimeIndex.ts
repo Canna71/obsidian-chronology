@@ -89,7 +89,7 @@ export class TimeIndex implements ITimeIndex {
 
 
 export class MockTimeIndex implements ITimeIndex {
-    getNotesForCalendarItem(item: CalendarItem): TFile[] {
+    getNotesForCalendarItem(item: CalendarItem) {
 
         return [];
     }
