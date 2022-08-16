@@ -7,33 +7,61 @@ If your plugin does not need CSS, delete this file.
 
 */
 
+.chronology-cell-other-month {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .chronology-calendar-box {
 	font-size: smaller;
 	max-width: 20em;
 }
-.chronology-days-grid {
-	display: grid;
-	grid-template-columns: repeat(8, 1fr);
-	grid-auto-rows: 1fr;
-	grid-gap: 0px; 
+
+.chronology-calendar-grid {
+	border-collapse: collapse;
+	/* border: 1px solid white; */
 }
 
-.chronology-days-grid div {
-	height: 32px;
-	width: 32px;
+.chronology-calendar-grid td,.chronology-calendar-grid th {
+	border: 1px solid var(--background-modifier-border);
+	width: 20pt;
+	min-width: 20pt;
+	height: 20pt;
 	text-align: center;
-	vertical-align: middle;
 }
 
-.chronology-days-gridcell {
-	/* border-top: 1px solid white; */
-	outline: 0.5px solid white;
+.chronology-calendar-weeknumber {
+	color: var(--text-faint);
+	font-weight: bold;	
 }
 
-.chronology-calendar-week-wrapper {
-	white-space: no-wrap;
+.chronology-calendar-day {
+
 }
 
-.chronology-other-month {
-	opacity: 50%;
+.chronology-cell-month {
+
 }
+
+.chronology-calendar-today {
+	outline-style:  solid;
+	
+	outline-color:  var(--interactive-accent);
+}
+
+
+.chronology-cell-other-months {
+	color: var(--text-faint);
+}
+
+
+
+
+.chronology-grid-dayofweek {
+	color: var(--text-faint);
+	/* color:  var(--interactive-accent); */
+}
+
+
+

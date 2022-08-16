@@ -10,7 +10,7 @@ export interface CalendarViewProps {
 export const CalendarContainer = (props: CalendarViewProps) => {
 
 		return (
-			<div>
+			<div className="chronology-container">
 				<Calendar date={"2022-08-15"} />
 			</div>
 		)

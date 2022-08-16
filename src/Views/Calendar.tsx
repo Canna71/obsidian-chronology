@@ -13,27 +13,42 @@ const startOfMonth = moment().startOf('month').format('YYYY-MM-DD hh:mm');
 const endOfMonth   = moment().endOf('month').format('YYYY-MM-DD hh:mm');
 */
 
+type WeekOrDay = number | moment.Moment;
+
+const Cell = ({data: weekOrDay, month}:{data:WeekOrDay, month:number}) => {
+
+		if(typeof weekOrDay === "number"){
+			return <td key={`week-${weekOrDay}`} className="chronology-calendar-weeknumber">{weekOrDay}</td>
+		} else {
+			const classes = [".chronology-calendar-day"]
+			classes.push(month===weekOrDay.month()?"chronology-current-month":"chronology-other-month");
+			if(weekOrDay.isSame(moment(),"day")) classes.push("chronology-calendar-today");
+	
+			return <td key={weekOrDay.dayOfYear()} className={classes.join(" ")}>{weekOrDay.date()}</td>
+		}
+
+}
+
 const Week = ({ weekNumber, month }: { weekNumber: number, month: number }) => {
 
 	const weekStart = moment().weekday(0).format("dddd");
 	const firstDayOfWeek = moment().day(weekStart).week(weekNumber);
 	const lastDayOfWeek = moment().day(weekStart).week(weekNumber).endOf("week");
 
-	const weekRange = [];
+	const weekRange : WeekOrDay[] = [weekNumber];
 	for (let i = firstDayOfWeek.clone(); i.isBefore(lastDayOfWeek); i = i.add(1, "days")) {
 		weekRange.push(i.clone());
 	}
 	// weekRange.push(lastDayOfWeek); 
 
-	console.log(weekRange);
+	// console.log(weekRange);
 
 	return (
-		<div className="chronology-calendar-week-wrapper">
-			<div>{weekNumber}</div>
-			{weekRange.map(date => (
-				<div key={date.dayOfYear()}>{date.date()}</div>
-			))}
-		</div>
+		<tr className="chronology-calendar-week-row">
+			{weekRange.map((date,i) => <Cell key={date.toString()} data={date} month={month} />
+
+			)}
+		</tr>
 	)
 }
 
@@ -43,7 +58,10 @@ const GridCell = ({day, month}:{day: number | moment.Moment | string, month:numb
 	} else if (typeof day === "string") {
 		return <div key={day}>{day}</div>
 	} else {
-		return <div className={month===day.month()?"chronology-current-month":"chronology-other-month"} key={day.dayOfYear()}>{day.date()}</div>
+		const classes = [".chronology-calendar-day"]
+		classes.push(month===day.month()?"chronology-current-month":"chronology-other-month");
+		if(day.isSame(moment(),"day")) classes.push("chronology-calendar-today");
+		return <div className={classes.join(" ")} key={day.dayOfYear()}>{day.date()}</div>
 	}
 }
 
@@ -59,31 +77,50 @@ export const Calendar = ({ date }: CalendarViewProps) => {
 	const firstDayOGrid = moment().day(weekStart).week(startWeek);
 	const lastDayOfGrid = moment().day(weekStart).week(endWeek).endOf("week");
 
-
-	// const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek);
-	const monthRange:(number | moment.Moment | string)[] = [""];
+	const daysOfTheWeek = [""];
 	const endofFirstFeek = firstDayOGrid.clone().endOf("week")
 	for (let d=firstDayOGrid.clone();d.isBefore(endofFirstFeek);d = d.add(1, "days")){
-		monthRange.push(d.format("dd"));  
+		daysOfTheWeek.push(d.format("dd"));  
 	}
 
-	for (let d = firstDayOGrid.clone(), week = startWeek, n = 0; d.isBefore(lastDayOfGrid); d = d.add(1, "days")) {
-		if ((n++ % 7) === 0) monthRange.push(week++);
-		monthRange.push(d.clone());
-	}
+	const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek);
 
-	console.log(monthRange);
+	// This is the version with one item per cell:
+
+	// const monthRange:(number | moment.Moment | string)[] = [""];
+	// const endofFirstFeek = firstDayOGrid.clone().endOf("week")
+	// for (let d=firstDayOGrid.clone();d.isBefore(endofFirstFeek);d = d.add(1, "days")){
+	// 	monthRange.push(d.format("dd"));  
+	// }
+
+	// for (let d = firstDayOGrid.clone(), week = startWeek, n = 0; d.isBefore(lastDayOfGrid); d = d.add(1, "days")) {
+	// 	if ((n++ % 7) === 0) monthRange.push(week++);
+	// 	monthRange.push(d.clone());
+	// }
+
+	// console.log(monthRange);
 
 	return (
 		<div className="chronology-calendar-box">
-			{/* <table>
-				<thead></thead>
-			</table> */}
-			<div>{monthName} {yearName}</div>
-			<div className="chronology-days-grid">
+			<table className="chronology-calendar-grid">
+				
+				<thead>
+					<tr>
+						<th colSpan={8}>{monthName} {yearName}</th>
+					</tr>
+					<tr>
+						{daysOfTheWeek.map(dow=><th className="chronology-grid-dayofweek" key={dow} >{dow}</th>)}
+					</tr>
+				</thead>
+				<tbody>
+					{monthRange.map(week=><Week key={week} weekNumber={week} month={month} />)}
+				</tbody>
+			</table>
+
+			{/* <div className="chronology-days-grid">
 				{monthRange.map((day,i) => <div  key={day.toString()}  className="chronology-days-gridcell"><GridCell{...{day, month}} /></div>
 				)}
-			</div>
+			</div> */}
 		</div>
 	)
 }
