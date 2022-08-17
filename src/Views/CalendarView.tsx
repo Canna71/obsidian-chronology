@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { moment } from "obsidian";
+import { moment, TFile } from "obsidian";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
@@ -42,13 +42,19 @@ export class CalendarView extends ItemView {
 		return "Example view";
 	}
 
-	
+	openNote(note:TFile, newLeaf=false){
+        console.log("TODO: open", note);
+        this.app.workspace.openLinkText(
+            note.basename,
+            note.path,
+            newLeaf);
+    }
 
 	render() {
 		this.root.render(
 			<React.StrictMode>
 				<TimeIndexContext.Provider value={new TimeIndex(this.app)}>
-					<CalendarContainer {...this.state} />
+					<CalendarContainer onOpen={this.openNote.bind(this)} {...this.state} />
 				</TimeIndexContext.Provider>
 			</React.StrictMode>
 		);
