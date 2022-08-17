@@ -34,6 +34,10 @@ export interface NoteAttributes {
     attribute: DateAttribute;
 }
 
+export interface NoteAttributesSorted extends NoteAttributes {
+    sortedBy: DateAttribute
+}
+
 export class TimeIndex implements ITimeIndex {
 
     app: App;
@@ -91,13 +95,17 @@ export class TimeIndex implements ITimeIndex {
         return notes;
     }
 
-    sortNotes(items: NoteAttributes[], sortingStrategy:SortingStrategy, desc=false):NoteAttributes[] {
+    sortNotes(items: NoteAttributes[], sortingStrategy:SortingStrategy, desc=false):NoteAttributesSorted[] {
         switch(sortingStrategy){
             case(SortingStrategy.Created):
-                return items.sort((a,b)=>(desc ? b.note.stat.ctime-a.note.stat.ctime : a.note.stat.ctime-b.note.stat.ctime));
+                return items.sort((a,b)=>(desc ? b.note.stat.ctime-a.note.stat.ctime : a.note.stat.ctime-b.note.stat.ctime))
+                        .map<NoteAttributesSorted>(item=>({...item, sortedBy: DateAttribute.Created}))
+                ;
             break;
             case(SortingStrategy.Modified):
-                return items.sort((a,b)=>(desc ? b.note.stat.mtime-a.note.stat.mtime : a.note.stat.mtime-b.note.stat.mtime));
+                return items.sort((a,b)=>(desc ? b.note.stat.mtime-a.note.stat.mtime : a.note.stat.mtime-b.note.stat.mtime))
+                        .map<NoteAttributesSorted>(item=>({...item, sortedBy: DateAttribute.Modified}))
+                ;
             break;
             case(SortingStrategy.Mixed):
                 return this.sortMix(items, desc);
@@ -108,16 +116,22 @@ export class TimeIndex implements ITimeIndex {
             break
         }
     }
-    sortMix(items: NoteAttributes[], desc=false): NoteAttributes[] {
+    sortMix(items: NoteAttributes[], desc=false): NoteAttributesSorted[] {
         // we need to duplicate notes for which creation and modification are
         // separated by a reasonable amount of time (how much??) 1 hour?
 
         const mixedNotes = items.reduce<any[]>((acc,item)=>{
-            acc.push({item,time:item.note.stat.ctime});
-            if(Math.abs(item.note.stat.mtime-item.note.stat.ctime)>LIMIT_TIME_DIFF_MS){
-                // acc.push({item,time:item.note.stat.ctime});
-                acc.push({item,time:item.note.stat.mtime});
-            } 
+
+            if(item.attribute === DateAttribute.Both){
+                acc.push({item,time:item.note.stat.ctime, sortedBy:DateAttribute.Created});
+                if(Math.abs(item.note.stat.mtime-item.note.stat.ctime)>LIMIT_TIME_DIFF_MS){
+                    acc.push({item,time:item.note.stat.mtime, sortedBy: DateAttribute.Modified});
+                }
+            } else if (item.attribute === DateAttribute.Created){
+                acc.push({item,time:item.note.stat.ctime, sortedBy:DateAttribute.Created});
+            } else if (item.attribute === DateAttribute.Modified){
+                acc.push({item,time:item.note.stat.mtime, sortedBy:DateAttribute.Modified});
+            }
             return acc;
         },[]);
 
