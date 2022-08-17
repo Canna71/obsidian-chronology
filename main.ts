@@ -6,58 +6,75 @@ import { ChronologySettingTab } from 'src/ChronologySettingTab';
 // Remember to rename these classes and interfaces!
 
 interface ChronologyPluginSettings {
-	mySetting: string;
+    mySetting: string;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
-	mySetting: 'default'
+    mySetting: 'default'
 }
 
 export default class ChronologyPlugin extends Plugin {
-	settings: ChronologyPluginSettings;
+    settings: ChronologyPluginSettings;
 
-	async onload() {
-		await this.loadSettings();
+    async onload() {
+        await this.loadSettings();
 
-		this.registerView(
-			CALENDAR_VIEW,
-			(leaf) => new CalendarView(leaf)
-		);
+        this.registerView(
+            CALENDAR_VIEW,
+            (leaf) => new CalendarView(leaf)
+        );
 
-		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Calendar View', (evt: MouseEvent) => {
-			this.activateView();
-		});
-		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('my-plugin-ribbon-class');
+        // This creates an icon in the left ribbon.
+        const ribbonIconEl = this.addRibbonIcon('dice', 'Calendar View', (evt: MouseEvent) => {
+            this.activateView();
+        });
+        // Perform additional things with the ribbon
+        ribbonIconEl.addClass('my-plugin-ribbon-class');
 
-		this.activateView();	
-	}
+        this.app.workspace.onLayoutReady(()=>{
+            this.activateView();
+        })
 
-	onunload() {
-		this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
-	}
+        // if (this.app.workspace.layoutReady) {
+        //     this.activateView();
+        // } else {
+        //     this.registerEvent(
+        //         this.app.workspace.on('something',
+        //             () => {
+        //                 console.log('something');
+        //                 this.activateView();
+        //             }
+        //         )
+        //     );
+        // }
 
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
 
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
+    }
 
-	async activateView() {
-		this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
+    onunload() {
+        this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
+    }
 
-		await this.app.workspace.getRightLeaf(false).setViewState({
-			type: CALENDAR_VIEW,
-			active: true,
-		});
+    async loadSettings() {
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    }
 
-		this.app.workspace.revealLeaf(
-			this.app.workspace.getLeavesOfType(CALENDAR_VIEW)[0]
-		);
-	}
+    async saveSettings() {
+        await this.saveData(this.settings);
+    }
+
+    async activateView() {
+        this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
+
+        await this.app.workspace.getRightLeaf(false).setViewState({
+            type: CALENDAR_VIEW,
+            active: true,
+        });
+
+        this.app.workspace.revealLeaf(
+            this.app.workspace.getLeavesOfType(CALENDAR_VIEW)[0]
+        );
+    }
 }
 
 
