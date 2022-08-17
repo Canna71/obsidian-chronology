@@ -3,47 +3,52 @@ import * as  React from "react";
 import { useCallback } from "react";
 
 import { CalendarItem } from "../CalendarType";
-import { TimeResult } from "../TimeIndex";
+import { NoteAttributes } from "../TimeIndex";
 
+function isMacOS() {
+    return navigator.userAgent.indexOf("Mac") !== -1;
+}
+
+function isMetaPressed(e: MouseEvent): boolean {
+    return isMacOS() ? e.metaKey : e.ctrlKey;
+}
+
+const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile, newLeaf: boolean) => void }) => {
+
+
+    const onClick = useCallback(
+        (event: React.MouseEvent<HTMLElement>) => {
+
+            onOpen(item.note, isMetaPressed(event.nativeEvent));
+        }
+        , [item, onOpen]);
+
+
+
+    return (
+        <li
+            onClick={onClick}
+            key={item.note.path}>
+            {item.note.basename}
+        </li>
+    )
+}
 
 
 export const TimeLine = ({ calItem, items, onOpen }:
     {
         calItem: CalendarItem,
-        items: TimeResult[],
-        onOpen: (note: TFile, newLeaf:boolean) => void
+        items: NoteAttributes[],
+        onOpen: (note: TFile, newLeaf: boolean) => void
     }) => {
 
-    console.log(items);
 
-    // const onClick = useCallback(
-    //     (note: TFile) => {
-    //         console.log("lambda: ", note);
-    //         return useCallback(() => {
-    //             console.log("onclick")
-    //             onOpen(note);
-    //         }, [note, onOpen]);
-    //     }
-    //     ,[onOpen]);
-
-    const onClick = (note:TFile)=>{
-        return (
-            (event:React.MouseEvent<HTMLElement>)=>{
-                console.log(event)
-                onOpen(note, event.metaKey||event.ctrlKey);
-            }
-        )
-    
-    }
 
     return (
         <ul>
-            {items.map(item => 
-                <li 
-                    onClick={onClick(item.note)} 
-                    key={item.note.path}>
-                        {item.note.basename}
-                </li>)}
+            {items.map(item =>
+                <NoteView key={item.note.path} item={item} onOpen={onOpen} />
+            )}
         </ul>
     );
 }

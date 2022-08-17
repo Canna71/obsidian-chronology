@@ -5,7 +5,7 @@ import { CalendarItem, CalendarItemType } from "./CalendarType";
 
 export interface ITimeIndex {
     getHeatForDate(date: string): number;
-    getNotesForCalendarItem(item: CalendarItem): TimeResult[];
+    getNotesForCalendarItem(item: CalendarItem): NoteAttributes[];
 }
 
 export enum DateAttribute {
@@ -21,7 +21,7 @@ const AttributesMatches = {
     "falsefalse": -1
 }
 
-export interface TimeResult {
+export interface NoteAttributes {
     note: TFile;
     attribute: DateAttribute;
 }
@@ -34,7 +34,7 @@ export class TimeIndex implements ITimeIndex {
         this.app = app;
     }
 
-    getNotesForCalendarItem(item: CalendarItem): TimeResult[] {
+    getNotesForCalendarItem(item: CalendarItem): NoteAttributes[] {
         const allNotes = this.app.vault.getMarkdownFiles();
         let fromTime: moment.Moment, 
             toTime: moment.Moment;
@@ -61,7 +61,7 @@ export class TimeIndex implements ITimeIndex {
                 break;
         }
 
-        const notes = allNotes.reduce<TimeResult[]>((acc,note) => {
+        const notes = allNotes.reduce<NoteAttributes[]>((acc,note) => {
             const createdTime = moment(note.stat.ctime);
             const modifiedTime = moment(note.stat.mtime);
 
