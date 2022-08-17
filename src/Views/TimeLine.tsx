@@ -47,7 +47,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
     return (
         <ul>
             {items.map(item =>
-                <NoteView key={item.note.path+"TODO:"} item={item} onOpen={onOpen} />
+                <NoteView key={item.note.path+item.attribute} item={item} onOpen={onOpen} />
             )}
         </ul>
     );
