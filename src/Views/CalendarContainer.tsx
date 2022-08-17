@@ -22,7 +22,6 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 
 	const handleChange = useCallback(
 		(value:CalendarItem) => {
-            console.log("onchange")
 			setDate(value);
 		},
 		[setDate],
