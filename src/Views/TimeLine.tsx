@@ -3,7 +3,7 @@ import * as  React from "react";
 import { useCallback } from "react";
 
 import { CalendarItem } from "../CalendarType";
-import { NoteAttributes } from "../TimeIndex";
+import { DateAttribute, NoteAttributes } from "../TimeIndex";
 
 function isMacOS() {
     return navigator.userAgent.indexOf("Mac") !== -1;
@@ -26,11 +26,11 @@ const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile
 
 
     return (
-        <li
+        <div
             onClick={onClick}
             key={item.note.path}>
-            {item.note.basename}
-        </li>
+            {item.note.basename}({item.attribute===DateAttribute.Created?'c':'m'})
+        </div>
     ) 
 }
 
@@ -45,11 +45,22 @@ export const TimeLine = ({ calItem, items, onOpen }:
 
 
     return (
-        <ul>
+        <div className="chronology-timeline-container">
             {items.map(item =>
-                <NoteView key={item.note.path+item.attribute} item={item} onOpen={onOpen} />
+                // <div className="chrono-temp-slot1">
+                    <>
+                   
+                    <div className="chrono-temp-slot1-info">
+                    &nbsp;
+                    </div>
+                    <div className="chrono-temp-slot1-content">
+                        <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} />
+                    </div>
+                    </>
+
+                // </div>
             )}
-        </ul>
+        </div>
     );
 }
 

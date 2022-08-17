@@ -11,6 +11,7 @@ If your plugin does not need CSS, delete this file.
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
 }
 
 .chronology-cell-other-month {
@@ -20,6 +21,7 @@ If your plugin does not need CSS, delete this file.
 .chronology-calendar-box {
 	font-size: smaller;
 	max-width: 20em;
+    flex: 0;
 }
 
 .chronology-calendar-grid {
@@ -106,5 +108,21 @@ If your plugin does not need CSS, delete this file.
 	/* color:  var(--interactive-accent); */
 }
 
+.chronology-timeline-container {
+    overflow-y: auto;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 64px, 1fr;
+    grid-auto-rows: 100px;
+    width: 100%;
+}
 
+.chrono-temp-slot1-info {
+    /* grid-column: 1; */
+    border-right: 1px solid var(--background-modifier-border);
+}
+
+.chrono-temp-slot1-content {
+    /* grid-column: 2; */
+}
 
