@@ -42,12 +42,15 @@ export class CalendarView extends ItemView {
 		return "Example view";
 	}
 
-	openNote(note:TFile, newLeaf=false){
+	async openNote(note:TFile, newLeaf=false){
         console.log("TODO: open", note);
-        this.app.workspace.openLinkText(
-            note.basename,
-            note.path,
-            newLeaf);
+        // this.app.workspace.openLinkText(
+        //     note.basename,
+        //     note.path,
+        //     newLeaf);
+
+        const leaf = app.workspace.getLeaf(newLeaf);
+        await leaf.openFile(note);
     }
 
 	render() {

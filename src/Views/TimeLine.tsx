@@ -31,7 +31,7 @@ const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile
             key={item.note.path}>
             {item.note.basename}
         </li>
-    )
+    ) 
 }
 
 
