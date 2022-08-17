@@ -112,7 +112,7 @@ If your plugin does not need CSS, delete this file.
     overflow-y: auto;
     flex: 1;
     display: grid;
-    grid-template-columns: 64px, 1fr;
+    grid-template-columns: 64px 1fr;
     grid-auto-rows: 100px;
     width: 100%;
 }
