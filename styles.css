@@ -198,6 +198,12 @@ If your plugin does not need CSS, delete this file.
     line-height: 8pt;
 }
 
+.chrono-note-time {
+    font-size: 60%;
+    display: none;;
+    /* margin-left: -6em; */
+}
+
 .chrono-badge.chrono-created {
     background-color: var(--interactive-success);
 }

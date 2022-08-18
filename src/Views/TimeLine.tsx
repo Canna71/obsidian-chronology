@@ -2,7 +2,7 @@
 import { TFile, moment } from "obsidian";
 import * as  React from "react";
 import { useCallback } from "react";
-import { groupBy, groupByOrdered, range } from "src/utils";
+import { groupBy, range } from "src/utils";
 
 import { CalendarItem } from "../CalendarType";
 import { DateAttribute, NoteAttributes } from "../TimeIndex";
@@ -47,6 +47,7 @@ const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile
             className="chrono-temp-note"
             onClick={onClick}
             key={item.note.path}>
+            <span className="chrono-note-time">{time.format("LT")}</span>
             <Badge attribute={item.attribute} time={time} />
             {item.note.basename}
         </div>
@@ -94,8 +95,9 @@ export const TimeLine = ({ calItem, items, onOpen }:
 
 
 function clusterize(items: NoteAttributes[]) {
-    const slotSize = "hour";
-    const numberOfClusters = 5;
+
+    // const slotSize = "hour";
+    // const numberOfClusters = 5;
 
     // groups items in slot of slotSize
     //TODO: generalize the slots creation, available will be:
