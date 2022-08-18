@@ -1,5 +1,5 @@
 
-import { TFile, moment, MomentFormatComponent } from "obsidian";
+import { TFile, moment } from "obsidian";
 import * as  React from "react";
 import { useCallback } from "react";
 import { groupBy, groupByOrdered, range } from "src/utils";
@@ -67,7 +67,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
 
     return (
         <div className="chronology-timeline-container">
-            {slotsWithData.map(({ slot, items }, slotNmber) =>
+            {slotsWithData.map(({ slot, clusters }, slotNmber) =>
                 <div key={slot} className="chrono-temp-slot1">
 
 
@@ -75,9 +75,14 @@ export const TimeLine = ({ calItem, items, onOpen }:
                         <div className="chrono-temp-slot1-name">{slot}</div>
                     </div>
                     <div className="chrono-temp-slot1-content">
-                        {items && items.map(item => (
-                            <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} />
-                        ))}
+                        {clusters.map(
+                            ({cluster,items}) => 
+                            <div className="chrono-cluster-container">
+                            {items && items.map(item=>
+                                <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} />
+                            )}
+                            </div>
+                        )}
                     </div>
 
 
@@ -110,6 +115,29 @@ function clusterize(items: NoteAttributes[]) {
     console.log(first);
     console.log(last);
     slotsWithData = slotsWithData.slice(first, last + 1);
-    return slotsWithData;
+    
+    const clusters = range(0,5).reverse().map(s=>(s*10).toString());
+    const slotAndClusters = slotsWithData.map(slot => {
+        const items = slot.items || [];
+        const clusterBy = groupBy(items, (item: NoteAttributes)=> Math.floor(moment(item.time).minutes()/10)*10);
+        
+        const clusterList = clusters.map(clName=>(
+            {
+                cluster: clName,
+                items: clusterBy[clName]
+            })
+        ); 
+
+        // let clustersWithData = clusters.map(cluster=>({
+        //     cluster,
+        //     items:  clusterBy[cluster]       
+        // })) 
+        return ({
+            slot: slot.slot,
+            clusters: clusterList
+        })
+    })
+
+    return slotAndClusters;
 }
 

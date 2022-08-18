@@ -143,6 +143,10 @@ If your plugin does not need CSS, delete this file.
     justify-content: flex-end;
 }
 
+.chrono-cluster-container {
+    height: 20px;;
+}
+
 .chrono-temp-note {
     color: var(--text-muted);
     position: relative;
