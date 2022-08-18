@@ -78,7 +78,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
                     <div className="chrono-temp-slot1-content">
                         {clusters.map(
                             ({cluster,items}) => 
-                            <div className="chrono-cluster-container">
+                            <div key={cluster} className="chrono-cluster-container">
                             {items && items.map(item=>
                                 <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} />
                             )}
