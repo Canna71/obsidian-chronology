@@ -111,18 +111,63 @@ If your plugin does not need CSS, delete this file.
 .chronology-timeline-container {
     overflow-y: auto;
     flex: 1;
-    display: grid;
-    grid-template-columns: 64px 1fr;
-    grid-auto-rows: 100px;
+    /* display: flex; */
+    /* flex-direction: column; */
     width: 100%;
+}
+
+.chrono-temp-slot1 {
+    display: flex;
+    height: 128px;
 }
 
 .chrono-temp-slot1-info {
     /* grid-column: 1; */
     border-right: 1px solid var(--background-modifier-border);
+    border-top: 1px solid var(--background-modifier-border);
+    flex: 0 0 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.chrono-temp-slot1-name {
+    margin-right: 5pt;
 }
 
 .chrono-temp-slot1-content {
-    /* grid-column: 2; */
+    border-top: 1px solid var(--background-modifier-border);
+    flex: 1;
+    margin-left: 2pt;
+    margin-top: 5pt;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
+.chrono-temp-note {
+    color: var(--text-muted);
+}
+
+.chrono-temp-note:hover {
+    background-color: var(--background-secondary-alt);
+    color: var(--text-normal); 
+}
+
+.chrono-badge {
+    display: inline-block;
+    margin-right: 2pt;
+    border-radius: 50%;
+    width: 8pt;
+    height: 8pt;
+    line-height: 8pt;
+}
+
+.chrono-badge.chrono-created {
+    background-color: var(--interactive-success);
+}
+
+.chrono-badge.chrono-modified {
+    background-color: var(--text-selection);
+}

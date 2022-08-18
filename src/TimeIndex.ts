@@ -32,6 +32,7 @@ const AVG_DAILY_NOTES = 3;
 const HEAT_SCALE=10;
 export interface NoteAttributes {
     note: TFile;
+    time: number;
     attribute: DateAttribute;
 }
 
@@ -61,10 +62,12 @@ export class TimeIndex implements ITimeIndex {
             if (sortingStrategy === SortingStrategy.Mixed && matchCreated && matchModified && timeDiffMs > LIMIT_TIME_DIFF_MS) {
                 acc.push({
                     note,
+                    time: note.stat.ctime,
                     attribute: DateAttribute.Created
                 });
                 acc.push({
                     note,
+                    time: note.stat.mtime,
                     attribute: DateAttribute.Modified
                 });
                 return acc;
@@ -75,6 +78,7 @@ export class TimeIndex implements ITimeIndex {
             ) {
                 acc.push({
                     note,
+                    time: note.stat.ctime,
                     attribute: DateAttribute.Created
                 });
                 return acc;
@@ -84,6 +88,7 @@ export class TimeIndex implements ITimeIndex {
             ) {
                 acc.push({
                     note,
+                    time: note.stat.mtime,
                     attribute: DateAttribute.Modified
                 });
                 return acc
@@ -102,85 +107,42 @@ export class TimeIndex implements ITimeIndex {
     private getTimeRange(item: CalendarItem) {
         let fromTime: moment.Moment, toTime: moment.Moment;
 
+        function getMomentTimeRange(period: moment.unitOfTime.StartOf) {
+            fromTime = moment(item.date).startOf(period);
+            toTime = moment(item.date).endOf(period);
+            return { fromTime, toTime };
+        }
+
         switch (item.type) {
             case (CalendarItemType.Year):
-                fromTime = moment(item.date).startOf("year");
-                toTime = moment(item.date).endOf("year");
+                return getMomentTimeRange("year");
                 break;
             case (CalendarItemType.Month):
-                fromTime = moment(item.date).startOf("month");
-                toTime = moment(item.date).endOf("month");
+                return getMomentTimeRange("month");
                 break;
             case (CalendarItemType.Week):
-                fromTime = moment(item.date).startOf("week");
-                toTime = moment(item.date).endOf("week");
+                return getMomentTimeRange("week");
                 break;
             case (CalendarItemType.Day):
-                fromTime = moment(item.date).startOf("day");
-                toTime = moment(item.date).endOf("day");
+                return getMomentTimeRange("day");
                 break;
             default:
                 console.error("Unknown Calendar Item Type!!!");
                 break;
         }
-        return { fromTime, toTime };
+
     }
 
     sortNotes(items: NoteAttributes[], sortingStrategy: SortingStrategy, desc = false): NoteAttributes[] {
         const res = items.sort((a,b)=>
-            (a.attribute===DateAttribute.Created ? a.note.stat.ctime:a.note.stat.mtime)  
-            -  
-            (b.attribute===DateAttribute.Created ? b.note.stat.ctime:b.note.stat.mtime)      
+            (a.time-b.time)  
         )
-
-        // switch (sortingStrategy) {
-           
-        //     case (SortingStrategy.Created):
-        //         res = items.sort((a, b) => (a.note.stat.ctime - b.note.stat.ctime))
-        //             // .map<NoteAttributesSorted>(item => ({ ...item, sortedBy: DateAttribute.Created }))
-        //             ;
-        //         break;
-        //     case (SortingStrategy.Modified):
-        //         res = items.sort((a, b) => (a.note.stat.mtime - b.note.stat.mtime))
-        //             // .map<NoteAttributesSorted>(item => ({ ...item, sortedBy: DateAttribute.Modified }))
-        //             ;
-        //         break;
-        //     case (SortingStrategy.Mixed):
-        //         return ;
-        //         break;
-        //     default:
-        //         console.error("Unknown sorting strategy!");
-        //         return items;
-        //         break
-        // }
         if(desc){
             res.reverse();
         }
         return res;
     }
 
-    // sortMix(items: NoteAttributes[], desc = false): NoteAttributesSorted[] {
-    //     // we need to duplicate notes for which creation and modification are
-    //     // separated by a reasonable amount of time (how much??) 1 hour?
-
-    //     const mixedNotes = items.reduce<any[]>((acc, item) => {
-
-    //         if (item.attribute === DateAttribute.Both) {
-    //             acc.push({ item, time: item.note.stat.ctime, sortedBy: DateAttribute.Created });
-    //             if (Math.abs(item.note.stat.mtime - item.note.stat.ctime) > LIMIT_TIME_DIFF_MS) {
-    //                 acc.push({ item, time: item.note.stat.mtime, sortedBy: DateAttribute.Modified });
-    //             }
-    //         } else if (item.attribute === DateAttribute.Created) {
-    //             acc.push({ item, time: item.note.stat.ctime, sortedBy: DateAttribute.Created });
-    //         } else if (item.attribute === DateAttribute.Modified) {
-    //             acc.push({ item, time: item.note.stat.mtime, sortedBy: DateAttribute.Modified });
-    //         }
-    //         return acc;
-    //     }, []);
-
-    //     mixedNotes.sort((a, b) => desc ? b.time - a.time : a.time - b.time);
-    //     return mixedNotes.map(mn => mn.item as NoteAttributes);
-    // }
 
     getHeatForDate(date: string | moment.Moment): number {
         const mom = moment(date);
