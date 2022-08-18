@@ -16,11 +16,13 @@ function isMetaPressed(e: MouseEvent): boolean {
 }
 
 const Badge = ({attribute,time}:{attribute: DateAttribute, time: moment.Moment}) => {
+
+
     if (attribute === DateAttribute.Created) {
 
-        return <div className="chrono-badge chrono-created" title={"Created"} ></div>
+        return <div className="chrono-badge chrono-created"  ></div>
     } else {
-        return <div className="chrono-badge chrono-modified" title={"Modified"}></div>
+        return <div className="chrono-badge chrono-modified" ></div>
 
     }
 }
@@ -37,12 +39,16 @@ const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile
 
     const time = moment(item.time);
 
+    const desc = `${item.attribute===DateAttribute.Created?"Created":"Modified"} ${time.format("LLL")}`;
+
     return (
         <div
+            data-text={desc}
             className="chrono-temp-note"
             onClick={onClick}
             key={item.note.path}>
-            <Badge attribute={item.attribute} time={time} />{item.note.basename}
+            <Badge attribute={item.attribute} time={time} />
+            {item.note.basename}
         </div>
     )
 }

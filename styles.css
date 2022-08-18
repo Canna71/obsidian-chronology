@@ -14,55 +14,54 @@ If your plugin does not need CSS, delete this file.
     height: 100%;
 }
 
-.chronology-cell-other-month {
-
-}
+.chronology-cell-other-month {}
 
 .chronology-calendar-box {
-	font-size: smaller;
-	max-width: 20em;
+    font-size: smaller;
+    max-width: 20em;
     flex: 0;
 }
 
 .chronology-calendar-grid {
-	border-collapse: collapse;
-	/* border: 1px solid white; */
+    border-collapse: collapse;
+    /* border: 1px solid white; */
 }
 
-.chronology-calendar-grid td,.chronology-calendar-grid th {
-	border: 1px solid var(--background-modifier-border);
-	width: 24pt;
-	min-width: 20pt;
-	height: 24pt;
-	text-align: center;
+.chronology-calendar-grid td,
+.chronology-calendar-grid th {
+    border: 1px solid var(--background-modifier-border);
+    width: 24pt;
+    min-width: 20pt;
+    height: 24pt;
+    text-align: center;
 }
 
 
 
 .chronology-calendar-weeknumber {
-	color: var(--text-faint);
-	font-weight: bold;	
+    color: var(--text-faint);
+    font-weight: bold;
 }
 
 
 
 .chronology-calendar-day {
-	position: relative;
+    position: relative;
 }
 
 .chronology-calendar-day:hover {
-	/* text-decoration: underline; */
+    /* text-decoration: underline; */
 
 }
 
 .chronology-calendar-selectable:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 .chronology-calendar-selectable.selected {
-	/* outline-style: solid;
+    /* outline-style: solid;
 	outline-color: var(--interactive-accent-hover); */
-    
+
     /* background-color: var(--text-accent-hover); */
     background-color: var(--text-highlight-bg);
 
@@ -76,36 +75,34 @@ If your plugin does not need CSS, delete this file.
 
 }
 
-.chronology-cell-month {
-
-}
+.chronology-cell-month {}
 
 .chronology-calendar-heat-background {
-	position:absolute;
-	bottom: 0px;
-	background-color: var(--background-modifier-border);
-	width: 100%;
-	z-index: -1;
+    position: absolute;
+    bottom: 0px;
+    background-color: var(--background-modifier-border);
+    width: 100%;
+    z-index: -1;
 }
 
 .chronology-calendar-today {
-	/* outline-style:  solid;
+    /* outline-style:  solid;
 	outline-color:  var(--interactive-accent); */
 
-	font-weight: 800;
+    font-weight: 800;
 }
 
- 
+
 .chronology-cell-other-months {
-	color: var(--text-faint);
+    color: var(--text-faint);
 }
 
 
 
 
 .chronology-grid-dayofweek {
-	color: var(--text-faint);
-	/* color:  var(--interactive-accent); */
+    color: var(--text-faint);
+    /* color:  var(--interactive-accent); */
 }
 
 .chronology-timeline-container {
@@ -148,11 +145,44 @@ If your plugin does not need CSS, delete this file.
 
 .chrono-temp-note {
     color: var(--text-muted);
+    position: relative;
+}
+
+.chrono-temp-note:before {
+    content: attr(data-text);
+    /* here's the magic */
+    position: absolute;
+
+    /* vertically center */
+    top: 0%;
+    left: 0px;
+    transform: translateY(-100%);
+
+    /* move to right */
+
+    /* right: 100%; */
+    margin-left: 5px;
+    /* and add a small left margin */
+
+    /* basic styles */
+    width: 200px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--background-secondary-alt);
+    color: var(--text-normal);
+    text-align: center;
+
+    display: none;
+    /* hide by default */
+}
+
+.chrono-temp-note:hover:before {
+    display: block;
 }
 
 .chrono-temp-note:hover {
     background-color: var(--background-secondary-alt);
-    color: var(--text-normal); 
+    color: var(--text-normal);
 }
 
 .chrono-badge {
