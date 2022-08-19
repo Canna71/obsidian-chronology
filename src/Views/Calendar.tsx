@@ -31,7 +31,10 @@ const Cell = ({ value,  current, onChange }: CalendarCellProps) => {
 
 	const handleChange = useCallback(
 		() => {
-			onChange(value);
+            // avoid triggering a pointless change. This works also for week numbers
+            if(!current.date.isSame(value.date,"day")) {
+                onChange(value);
+            }
 		},
 		[value],
 	)
@@ -43,14 +46,19 @@ const Cell = ({ value,  current, onChange }: CalendarCellProps) => {
 	// let selected = false;
 
 	if (value.type === CalendarItemType.Week) {
-		const classes = ["chronology-calendar-weeknumber", "chronology-calendar-selectable"]
-
+		const classes = ["chronology-calendar-weeknumber"]
+        if(current.type !== CalendarItemType.Week || !current.date.isSame(itemDate,"week")) {
+            classes.push("chronology-calendar-selectable");
+        }
 		// if (current.type === CalendarItemType.Week && currendDate.week() === itemDate.week()) {
 		// 	classes.push("selected")
 		// }
 		return <td key={`week-${value}`} className={classes.join(" ")} onClick={handleChange} >{itemDate.week()}</td>
 	} else {
-		const classes = ["chronology-calendar-day", "chronology-calendar-selectable"]
+		const classes = ["chronology-calendar-day"]; //
+        if(current.type !== CalendarItemType.Day || !current.date.isSame(itemDate,"day")) {
+            classes.push("chronology-calendar-selectable");
+        }
 		classes.push(month === itemDate.month() ? "chronology-current-month" : "chronology-other-month");
 
 		if (itemDate.isSame(moment(), "day")) classes.push("chronology-calendar-today");

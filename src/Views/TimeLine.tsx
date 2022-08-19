@@ -64,7 +64,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
 
 
     const slotsWithData = clusterize(items);
-    // console.log(slotsWithData);
+    console.log(slotsWithData);
 
     return (
         <div className="chronology-timeline-container">

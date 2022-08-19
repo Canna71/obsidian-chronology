@@ -58,7 +58,7 @@ If your plugin does not need CSS, delete this file.
     text-decoration: underline;
 }
 
-.chronology-calendar-selectable.selected {
+.chronology-calendar-day.selected, .chronology-calendar-week-row.selected {
     /* outline-style: solid;
 	outline-color: var(--interactive-accent-hover); */
 
@@ -67,13 +67,7 @@ If your plugin does not need CSS, delete this file.
 
 }
 
-.chronology-calendar-week-row.selected {
-    /* outline-style: solid;
-	outline-color: var(--interactive-accent-hover);    */
-    /* background-color: var(--text-accent-hover); */
-    background-color: var(--text-highlight-bg);
 
-}
 
 .chronology-cell-month {}
 
