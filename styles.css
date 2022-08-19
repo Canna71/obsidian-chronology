@@ -111,11 +111,13 @@ If your plugin does not need CSS, delete this file.
     /* display: flex; */
     /* flex-direction: column; */
     width: 100%;
+    padding-right: 3px;
 }
 
 .chrono-temp-slot1 {
     display: flex;
-    height: 128px;
+    height: 132px;
+    overflow-y: hidden;
 }
 
 .chrono-temp-slot1-info {
@@ -137,22 +139,31 @@ If your plugin does not need CSS, delete this file.
     border-top: 1px solid var(--background-modifier-border);
     flex: 1;
     margin-left: 2pt;
-    margin-top: 5pt;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    /* margin-top: 5pt; */
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: flex-end; */
+    overflow-y: auto;
+    
+    overflow-x: hidden;
+    padding: 2px;
 }
 
 .chrono-cluster-container {
-    height: 20px;;
+    min-height: 20px;;
 }
 
 .chrono-temp-note {
     color: var(--text-muted);
     position: relative;
+    padding: 1px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 14px;
 }
 
-.chrono-temp-note:before {
+.commented-chrono-temp-note:before {
     content: attr(data-text);
     /* here's the magic */
     position: absolute;
@@ -192,6 +203,7 @@ If your plugin does not need CSS, delete this file.
 .chrono-badge {
     display: inline-block;
     margin-right: 2pt;
+    margin-left: 2pt;
     border-radius: 50%;
     width: 8pt;
     height: 8pt;
@@ -200,7 +212,8 @@ If your plugin does not need CSS, delete this file.
 
 .chrono-note-time {
     font-size: 60%;
-    display: none;;
+    display: inline-block;
+    vertical-align: bottom;
     /* margin-left: -6em; */
 }
 

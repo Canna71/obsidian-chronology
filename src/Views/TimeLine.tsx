@@ -20,9 +20,9 @@ const Badge = ({attribute,time}:{attribute: DateAttribute, time: moment.Moment})
 
     if (attribute === DateAttribute.Created) {
 
-        return <div className="chrono-badge chrono-created"  ></div>
+        return <div className="chrono-badge chrono-created" title="Created"  ></div>
     } else {
-        return <div className="chrono-badge chrono-modified" ></div>
+        return <div className="chrono-badge chrono-modified" title="Modified" ></div>
 
     }
 }
@@ -81,7 +81,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
                             <div key={cluster} className="chrono-cluster-container">
                             {items && items.map(item=>
                                 <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} />
-                            )}
+                            )} 
                             </div>
                         )}
                     </div>
