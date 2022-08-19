@@ -64,7 +64,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
 
 
     const slotsWithData = clusterize(items);
-    console.log(slotsWithData);
+    // console.log(slotsWithData);
 
     return (
         <div className="chronology-timeline-container">
@@ -114,8 +114,6 @@ function clusterize(items: NoteAttributes[]) {
     const last = slotsWithData.length - slotsWithData.reverse().findIndex(item => item.items) - 1;
     slotsWithData.reverse();
 
-    console.log(first);
-    console.log(last);
     slotsWithData = slotsWithData.slice(first, last + 1);
     
     const clusters = range(0,5).reverse().map(s=>(s*10).toString());
