@@ -54,6 +54,44 @@ const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile
     )
 }
 
+export const ExpandableNoteList = ({items, onOpen}:{
+    items: NoteAttributes[],
+    onOpen: (note: TFile, newLeaf: boolean) => void
+}) => {
+
+    const [expanded, setExpanded] = React.useState(false)
+
+    const onExpand = useCallback(()=>{
+        setExpanded(true);
+    },[setExpanded])
+
+    if(items && items.length>1 && !expanded){
+        return (
+            <div className="chrono-cluster-container">
+                <div className="chrono-temp-note" title="Click To Expand" onClick={onExpand}>
+                <span className="chrono-note-time">{moment(items.first()!.time).format("LT")}</span>-
+                <span className="chrono-note-time">{moment(items.last()!.time).format("LT")}</span>
+                <span className="chrono-notes-count">
+                    {items.length}
+                </span>
+                <span  className="chrono-notes-notes">
+                    Notes
+                </span>
+                <span className="chrono-notes-ellipsis">...</span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="chrono-cluster-container">
+        {items && items.map(item=>
+            <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} />
+        )} 
+        </div>
+    );
+}
+
 
 export const TimeLine = ({ calItem, items, onOpen }:
     {
@@ -78,11 +116,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
                     <div className="chrono-temp-slot1-content">
                         {clusters.map(
                             ({cluster,items}) => 
-                            <div key={cluster} className="chrono-cluster-container">
-                            {items && items.map(item=>
-                                <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} />
-                            )} 
-                            </div>
+                            <ExpandableNoteList key={cluster} items={items} onOpen={onOpen} />
                         )}
                     </div>
 

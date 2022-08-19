@@ -137,7 +137,7 @@ If your plugin does not need CSS, delete this file.
     /* display: flex; */
     /* flex-direction: column; */
     /* justify-content: flex-end; */
-    overflow-y: auto;
+    overflow-y: scroll;
     
     overflow-x: hidden;
     padding: 2px;
@@ -217,4 +217,16 @@ If your plugin does not need CSS, delete this file.
 
 .chrono-badge.chrono-modified {
     background-color: var(--text-selection);
+}
+
+.chrono-notes-count {
+    margin-left: 2pt;
+    margin-right: 2pt;
+    /* color: var(--text-normal) */
+    /* background-color: var(--interactive-accent);
+    border-radius: 50%; */
+}
+
+.chrono-notes-ellipsis {
+    float: right;;
 }
