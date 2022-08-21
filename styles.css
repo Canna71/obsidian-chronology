@@ -40,10 +40,13 @@ If your plugin does not need CSS, delete this file.
 
 .chronology-calendar-weeknumber {
     color: var(--text-faint);
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
+.selected .chronology-calendar-weeknumber {
 
+    color: var(--text-normal);
+}
 
 .chronology-calendar-day {
     position: relative;
@@ -56,6 +59,7 @@ If your plugin does not need CSS, delete this file.
 
 .chronology-calendar-selectable:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .chronology-calendar-day.selected, .chronology-calendar-week-row.selected {
@@ -105,7 +109,8 @@ If your plugin does not need CSS, delete this file.
     /* display: flex; */
     /* flex-direction: column; */
     width: 100%;
-    padding-right: 3px;
+    padding-right: 3pt;
+    margin-top: 10pt;
 }
 
 .chrono-temp-slot1 {
@@ -185,13 +190,14 @@ If your plugin does not need CSS, delete this file.
     /* hide by default */
 }
 
-.chrono-temp-note:hover:before {
+.commented-chrono-temp-note:hover:before {
     display: block;
 }
 
 .chrono-temp-note:hover {
     background-color: var(--background-secondary-alt);
     color: var(--text-normal);
+    cursor: pointer;
 }
 
 .chrono-badge {

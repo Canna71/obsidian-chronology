@@ -24,3 +24,11 @@ export function groupByOrdered<T>(items: T[], selector: (item:T)=>any ){
 }
 
 export const range = (min:number, max:number) => Array.from({ length: max - min + 1 }, (_, i) => min + i) as number[];
+
+export function debounce(func: ()=>any, timeout = 300){
+    let timer: any;
+    return (...args: any) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }

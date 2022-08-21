@@ -8,12 +8,13 @@ import { TimeIndexContext } from "./CalendarView";
 import { TimeLine } from "./TimeLine"
 export interface CalendarContainerProps {
 	date: CalendarItem;
-    onOpen: (note:TFile, newLeaf: boolean)=>void
+    onOpen: (note:TFile, newLeaf: boolean)=>void;
+    vaultVer: number;
 }
 
 
 
-export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => { 
+export const CalendarContainer = ({date, onOpen, vaultVer}:CalendarContainerProps) => { 
 
 	const timeIndex = React.useContext(TimeIndexContext);
 	const [current, setDate] = React.useState(date);
@@ -26,6 +27,9 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 		},
 		[setDate],
 	)
+
+
+    
 
     const handleOpen = useCallback((note:TFile, newLeaf:boolean)=>{
         onOpen(note, newLeaf);

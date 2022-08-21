@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { moment, TFile } from "obsidian";
+import { debounce, moment, TFile } from "obsidian";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
@@ -18,7 +18,8 @@ export class CalendarView extends ItemView {
 		date: {
 			date: moment(),
 			type: CalendarItemType.Day
-		}
+		},
+        vaultVer: 0
 	};
 
 
@@ -28,8 +29,10 @@ export class CalendarView extends ItemView {
 		this.state = {
 			date: {
 				date: moment(),
-				type: CalendarItemType.Day
-			}
+				type: CalendarItemType.Day,
+
+			},
+            vaultVer: 0
 		};
 
 	}
@@ -48,6 +51,7 @@ export class CalendarView extends ItemView {
     }
 
 	render() {
+        
 		this.root.render(
 			<React.StrictMode>
 				<TimeIndexContext.Provider value={new TimeIndex(this.app)}>
@@ -57,15 +61,37 @@ export class CalendarView extends ItemView {
 		);
 	}
 
+    onVaultChanged = debounce((file:TFile) => {
+        this.state = {...this.state};
+        this.render();
+    },300);
+
 	async onOpen() {
 		const { contentEl } = this;
 		// contentEl.setText('Woah!');
 		// this.titleEl.setText("Obsidian Janitor")	
 		this.root = createRoot(contentEl/*.children[1]*/);
 		this.render();
+        // const onChange = debounce(
+        //     (file:TFile)=>{
+        //         console.log("onChanged 1");
+
+        //         //this.onVaultChanged(file);
+        //         console.log("onChanged 2");
+        //     }
+            
+        //     ,300,true);
+        this.app.vault.on("modify", this.onVaultChanged);
+        this.app.vault.on("create", this.onVaultChanged);
+        this.app.vault.on("delete", this.onVaultChanged);
+        this.app.vault.on("rename", this.onVaultChanged);
 	}
 
 	async onClose() {
+        this.app.vault.off("modify", this.onVaultChanged);
+        this.app.vault.off("create", this.onVaultChanged);
+        this.app.vault.off("delete", this.onVaultChanged);
+        this.app.vault.off("rename", this.onVaultChanged);
 		this.root.unmount();
 	}
 }
