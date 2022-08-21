@@ -115,7 +115,7 @@ If your plugin does not need CSS, delete this file.
 
 .chrono-temp-slot1 {
     display: flex;
-    height: 132px;
+    height: 157px;
     overflow-y: hidden;
 }
 
@@ -149,7 +149,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .chrono-cluster-container {
-    min-height: 20px;;
+    min-height: 25px;;
 }
 
 .chrono-temp-note {

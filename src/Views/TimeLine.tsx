@@ -77,7 +77,7 @@ export const ExpandableNoteList = ({ items, onOpen }: {
                     <span className="chrono-notes-notes">
                         Elements
                     </span>
-                    <span className="chrono-`notes`-ellipsis">...</span>
+                    <span className="chrono-notes-ellipsis">...</span>
                 </div>
             </div>
         );
