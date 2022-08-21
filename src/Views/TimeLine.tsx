@@ -75,7 +75,7 @@ export const ExpandableNoteList = ({ items, onOpen }: {
                         {items.length}
                     </span>
                     <span className="chrono-notes-notes">
-                        Notes
+                        Elements
                     </span>
                     <span className="chrono-notes-ellipsis">...</span>
                 </div>
@@ -99,7 +99,12 @@ const clusteringStrategies = {
         slotFn: (item: NoteAttributes) => moment(item.time).hour().toString(),
         clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).minutes() / 10) * 10).toString()
     },
-    [CalendarItemType.Week]: undefined,
+    [CalendarItemType.Week]: {
+        slots: moment.weekdaysShort(true),
+        clusters: range(0, 5).reverse().map(s => (s * 4).toString()), 
+        slotFn: (item: NoteAttributes) => moment.weekdaysShort()[moment(item.time).day()],
+        clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).hours()/4)*4).toString()
+    },
     [CalendarItemType.Month]: undefined,
     [CalendarItemType.Year]: undefined,
 
