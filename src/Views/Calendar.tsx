@@ -32,7 +32,7 @@ const Cell = ({ value, current, onChange }: CalendarCellProps) => {
     const handleChange = useCallback(
         () => {
             // avoid triggering a pointless change. This works also for week numbers
-            if (!current.date.isSame(value.date, "day")) {
+            if (!current.date.isSame(value.date, "day") || current.type !== value.type) {
                 onChange(value);
             }
         },
@@ -135,7 +135,7 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
         daysOfTheWeek.push(d.format("dd"));
     }
 
-    console.log(current.date.toString());
+    // console.log(current.date.toString());
 
     const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek);
 
@@ -153,10 +153,10 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
         onChange(new CalendarItem(currentDate, CalendarItemType.Year));
     }, [monthName]);
 
-    const shiftMonth = (diff:number) => useCallback( ()=> {
+    const shiftMonth = (diff: number) => useCallback(() => {
 
-        onChange(new CalendarItem(moment(currentDate).startOf("month").add(diff,"month"), CalendarItemType.Month));
-    },[diff,currentDate,onChange]);
+        onChange(new CalendarItem(moment(currentDate).startOf("month").add(diff, "month"), CalendarItemType.Month));
+    }, [diff, currentDate, onChange]);
 
     const monthClasses = [/*"chronology-calendar-selectable"*/];
     if (current.type === CalendarItemType.Month) {
