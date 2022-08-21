@@ -25,7 +25,7 @@ export default class ChronologyPlugin extends Plugin {
         );
 
         // This creates an icon in the left ribbon.
-        const ribbonIconEl = this.addRibbonIcon('dice', 'Calendar View', (evt: MouseEvent) => {
+        const ribbonIconEl = this.addRibbonIcon('clock', 'Open Chronology', (evt: MouseEvent) => {
             this.activateView();
         });
         // Perform additional things with the ribbon
