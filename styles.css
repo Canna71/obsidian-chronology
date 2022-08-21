@@ -236,3 +236,45 @@ If your plugin does not need CSS, delete this file.
 .chrono-notes-ellipsis {
     float: right;;
 }
+
+.chronology-calendar-chevron {
+    color: var(--text-muted);
+    cursor: var(--cursor);
+    /* padding: 5px 8px 0 8px;
+    margin: 0 3px 10px 3px; */
+    border-radius: 4px;
+}
+
+
+.chronology-calendar-chevron:hover {
+    color: var(--text-accent);
+}
+
+.chevron::before {
+	border-style: solid;
+	border-width: 0.25em 0.25em 0 0;
+	content: '';
+	display: inline-block;
+	height: 0.45em;
+	left: 0.15em;
+	position: relative;
+	top: 0.15em;
+	transform: rotate(-45deg);
+	/* vertical-align: top; */
+	width: 0.45em;
+}
+
+.chevron.right:before {
+	left: 0;
+	transform: rotate(45deg);
+}
+
+.chevron.bottom:before {
+	top: 0;
+	transform: rotate(135deg);
+}
+
+.chevron.left:before {
+	left: 0.25em;
+	transform: rotate(-135deg);
+}

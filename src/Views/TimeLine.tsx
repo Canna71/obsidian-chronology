@@ -77,7 +77,7 @@ export const ExpandableNoteList = ({ items, onOpen }: {
                     <span className="chrono-notes-notes">
                         Elements
                     </span>
-                    <span className="chrono-notes-ellipsis">...</span>
+                    <span className="chrono-`notes`-ellipsis">...</span>
                 </div>
             </div>
         );
@@ -131,7 +131,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
         clusterStrat.clusters,
         clusterStrat.clusterFn
     );
-    console.log(slotsWithData);
+    // console.log(slotsWithData);
 
     return (
         <div className="chronology-timeline-container">
