@@ -42,7 +42,7 @@ export class CalendarView extends ItemView {
 	}
 
 	getDisplayText() {
-		return "Example view";
+		return "Chronology";
 	}
 
 	async openNote(note:TFile, newLeaf=false){
