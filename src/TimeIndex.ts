@@ -127,7 +127,7 @@ export class TimeIndex implements ITimeIndex {
                 return getMomentTimeRange("day");
                 break;
             default:
-                console.error("Unknown Calendar Item Type!!!");
+                throw new Error("Unknown Calendar Item Type!!!");
                 break;
         }
 
