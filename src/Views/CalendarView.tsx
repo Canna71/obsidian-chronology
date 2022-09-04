@@ -34,8 +34,10 @@ export class CalendarView extends ItemView {
 			},
             vaultVer: 0
 		};
-
+        this.icon = "clock";
 	}
+
+    
 
 	getViewType() {
 		return CALENDAR_VIEW;

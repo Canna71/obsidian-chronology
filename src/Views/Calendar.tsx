@@ -12,10 +12,6 @@ export interface CalendarViewProps {
 }
 
 
-// export type CalendarItem = {
-// 	date: moment.Moment;
-// 	type: CalendarItemType;
-// }
 
 
 
