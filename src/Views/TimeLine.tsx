@@ -2,6 +2,7 @@
 import { TFile, moment } from "obsidian";
 import * as  React from "react";
 import { useCallback } from "react";
+import { getChronologySettings } from "src/main";
 import { groupBy, range } from "src/utils";
 
 import { CalendarItem, CalendarItemType } from "../CalendarType";
@@ -92,23 +93,31 @@ export const ExpandableNoteList = ({ items, onOpen }: {
     );
 }
 
-const clusteringStrategies = {
-    [CalendarItemType.Day]: {
-        slots: range(0, 23).reverse().map(n => n.toString()),
-        clusters: range(0, 5).reverse().map(s => (s * 10).toString()),
-        slotFn: (item: NoteAttributes) => moment(item.time).hour().toString(),
-        clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).minutes() / 10) * 10).toString()
-    },
-    [CalendarItemType.Week]: {
-        slots: moment.weekdaysShort(true),
-        clusters: range(0, 5).reverse().map(s => (s * 4).toString()), 
-        slotFn: (item: NoteAttributes) => moment.weekdaysShort()[moment(item.time).day()],
-        clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).hours()/4)*4).toString()
-    },
-    [CalendarItemType.Month]: undefined,
-    [CalendarItemType.Year]: undefined,
 
+function getClusteringStrategy() {
+    //let clusteringStrategies: { 0: { slots: string[]; clusters: string[]; slotFn: (item: NoteAttributes) => string; clusterFn: (item: NoteAttributes) => string; }; 1: { slots: string[]; clusters: string[]; slotFn: (item: NoteAttributes) => string; clusterFn: (item: NoteAttributes) => string; }; 2: undefined; 3: undefined; };
+
+
+    const clusteringStrategies = {
+            [CalendarItemType.Day]: {
+                slots: range(0, 23).reverse().map(n => moment().hour(n).format(getChronologySettings().use24Hours?"HH":"hh A")),
+                clusters: range(0, 5).reverse().map(s => (s * 10).toString()),
+                slotFn: (item: NoteAttributes) => moment(item.time).format(getChronologySettings().use24Hours?"HH":"hh A"),
+                clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).minutes() / 10) * 10).toString()
+            },
+            [CalendarItemType.Week]: {
+                slots: moment.weekdaysShort(true),
+                clusters: range(0, 5).reverse().map(s => (s * 4).toString()), 
+                slotFn: (item: NoteAttributes) => moment.weekdaysShort()[moment(item.time).day()],
+                clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).hours()/4)*4).toString()
+            },
+            [CalendarItemType.Month]: undefined,
+            [CalendarItemType.Year]: undefined,
+        }
+    
+    return clusteringStrategies;
 }
+
 
 
 export const TimeLine = ({ calItem, items, onOpen }:
@@ -118,7 +127,8 @@ export const TimeLine = ({ calItem, items, onOpen }:
         onOpen: (note: TFile, newLeaf: boolean) => void
     }) => {
 
-    const clusterStrat = clusteringStrategies[calItem.type];
+    const clusterStrat = getClusteringStrategy()[calItem.type];
+    console.log(clusterStrat);
     if(!clusterStrat){
         return (
             <div></div>
@@ -164,14 +174,8 @@ function clusterize(items: NoteAttributes[],
     clusterByFn: (item: NoteAttributes) => string
 ) {
 
-    // const slotSize = "hour";
-    // const numberOfClusters = 5;
 
     // groups items in slot of slotSize
-    //TODO: generalize the slots creation, available will be:
-    // hours: 0-23
-    // 
-    //const slots = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
 
     const groupedBy = groupBy(items, slotByFn);
 

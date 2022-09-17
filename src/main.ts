@@ -1,17 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CalendarView, CALENDAR_VIEW } from './src/Views/CalendarView';
+import { CalendarView, CALENDAR_VIEW } from './Views/CalendarView';
 import { App, Modal, Plugin } from 'obsidian';
 import { ChronologySettingTab } from 'src/ChronologySettingTab';
 
 // Remember to rename these classes and interfaces!
 
 interface ChronologyPluginSettings {
-    mySetting: string;
+    addRibbonIcon: boolean;
+    launchOnStartup: boolean;
+    use24Hours: boolean;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
-    mySetting: 'default'
+    addRibbonIcon: true,
+    launchOnStartup: true,
+    use24Hours: true
 }
+
+let expSettings: ChronologyPluginSettings;
+
+export function getChronologySettings(){return expSettings;}
 
 export default class ChronologyPlugin extends Plugin {
     settings: ChronologyPluginSettings;
@@ -24,16 +32,30 @@ export default class ChronologyPlugin extends Plugin {
             (leaf) => new CalendarView(leaf)
         );
 
-        // This creates an icon in the left ribbon.
-        const ribbonIconEl = this.addRibbonIcon('clock', 'Open Chronology', (evt: MouseEvent) => {
-            this.activateView();
-        });
+        if(this.settings.addRibbonIcon){
+            const ribbonIconEl = this.addRibbonIcon('clock', 'Open Chronology', (evt: MouseEvent) => {
+                this.activateView();
+            });
+            ribbonIconEl.addClass('my-plugin-ribbon-class');
+        }
         // Perform additional things with the ribbon
-        ribbonIconEl.addClass('my-plugin-ribbon-class');
 
+        
         this.app.workspace.onLayoutReady(()=>{
-            this.activateView();
+            if(this.settings.launchOnStartup){
+                this.activateView();
+            }
         })
+
+        this.addCommand({
+            id: "show-mathpad-view",
+            name: "Show Chronology Sidebar",
+            callback: () => this.activateView(),
+          });
+
+        
+        this.addSettingTab(new ChronologySettingTab(this.app, this));
+
 
         // if (this.app.workspace.layoutReady) {
         //     this.activateView();
@@ -57,6 +79,7 @@ export default class ChronologyPlugin extends Plugin {
 
     async loadSettings() {
         this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+        expSettings = this.settings;
     }
 
     async saveSettings() {
@@ -68,7 +91,9 @@ export default class ChronologyPlugin extends Plugin {
 
         await this.app.workspace.getRightLeaf(false).setViewState({
             type: CALENDAR_VIEW,
-            active: true,
+            active: true
+        }, {
+            settings: this.settings
         });
 
         this.app.workspace.revealLeaf(

@@ -1,5 +1,6 @@
-import ChronologyPlugin from "main";
+
 import { App, PluginSettingTab, Setting } from "obsidian";
+import ChronologyPlugin from "./main";
 
 export class ChronologySettingTab extends PluginSettingTab {
 	plugin: ChronologyPlugin;
@@ -14,18 +15,36 @@ export class ChronologySettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+		containerEl.createEl('h2', {text: 'Chronology Settings'});
 
+		this.createToggle(containerEl, "Add Ribbon Icon",
+            "Adds an icon to the ribbon to launch scan",
+            "addRibbonIcon"
+        );
+
+        this.createToggle(containerEl, "Open on start up",
+            "Opens the chronology sidebar when Obsidian starts.",
+            "launchOnStartup"
+        );
+
+        this.createToggle(containerEl, "24 hours display",
+        "Uses 24 hours display mode in timeline",
+        "use24Hours"
+    );
+	}
+
+
+    private createToggle(containerEl: HTMLElement, name: string, desc: string, prop: string) {
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
+			.setName(name)
+			.setDesc(desc)
+			.addToggle(bool => bool
+				.setValue((this.plugin.settings as any)[prop] as boolean)
 				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
+					(this.plugin.settings as any)[prop] = value;
 					await this.plugin.saveSettings();
-				}));
+					this.display();
+				})
+			);
 	}
 }

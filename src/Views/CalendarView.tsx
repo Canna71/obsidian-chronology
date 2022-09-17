@@ -27,7 +27,7 @@ export class CalendarView extends ItemView {
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
 		this.state = {
-			date: {
+			date: { 
 				date: moment(),
 				type: CalendarItemType.Day,
 
