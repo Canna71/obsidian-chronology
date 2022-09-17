@@ -142,7 +142,7 @@ If your plugin does not need CSS, delete this file.
     /* display: flex; */
     /* flex-direction: column; */
     /* justify-content: flex-end; */
-    overflow-y: scroll;
+    overflow-y: auto;
     
     overflow-x: hidden;
     padding: 2px;
