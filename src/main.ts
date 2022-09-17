@@ -49,7 +49,7 @@ export default class ChronologyPlugin extends Plugin {
 
         this.addCommand({
             id: "show-mathpad-view",
-            name: "Show Chronology Sidebar",
+            name: "Show Sidebar",
             callback: () => this.activateView(),
           });
 
