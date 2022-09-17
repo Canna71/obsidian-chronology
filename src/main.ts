@@ -9,12 +9,14 @@ interface ChronologyPluginSettings {
     addRibbonIcon: boolean;
     launchOnStartup: boolean;
     use24Hours: boolean;
+    avgDailyNotes: number;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
     addRibbonIcon: true,
     launchOnStartup: true,
-    use24Hours: true
+    use24Hours: true,
+    avgDailyNotes: 3
 }
 
 let expSettings: ChronologyPluginSettings;

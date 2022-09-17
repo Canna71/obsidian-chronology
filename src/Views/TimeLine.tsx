@@ -128,7 +128,6 @@ export const TimeLine = ({ calItem, items, onOpen }:
     }) => {
 
     const clusterStrat = getClusteringStrategy()[calItem.type];
-    console.log(clusterStrat);
     if(!clusterStrat){
         return (
             <div></div>
@@ -187,7 +186,11 @@ function clusterize(items: NoteAttributes[],
     const last = slotsWithData.length - slotsWithData.reverse().findIndex(item => item.items) - 1;
     slotsWithData.reverse();
 
-    slotsWithData = slotsWithData.slice(first, last + 1);
+    if(first>=0){
+        slotsWithData = slotsWithData.slice(first, last + 1);
+    } else {
+        slotsWithData = [];
+    }
 
 
     const slotAndClusters = slotsWithData.map(slot => {

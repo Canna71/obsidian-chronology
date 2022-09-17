@@ -30,7 +30,21 @@ export class ChronologySettingTab extends PluginSettingTab {
         this.createToggle(containerEl, "24 hours display",
         "Uses 24 hours display mode in timeline",
         "use24Hours"
-    );
+        );
+
+        new Setting(this.containerEl)
+            .setName("Average Daily Notes")
+            .setDesc("Used to display the daily indicator in the calendar")
+            .addText(cb=>{
+                cb
+                .setValue(this.plugin.settings.avgDailyNotes ? this.plugin.settings.avgDailyNotes.toString() : "")
+                .onChange(async (value)=>{
+                    this.plugin.settings.avgDailyNotes = Number(value);
+                    await this.plugin.saveSettings();
+					// this.display();
+                })
+                
+            })
 	}
 
 

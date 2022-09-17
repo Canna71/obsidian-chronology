@@ -1,3 +1,4 @@
+import { getChronologySettings } from 'src/main';
 
 // import { moment } from "obsidian";
 import { App, TFile, moment } from "obsidian";
@@ -28,7 +29,7 @@ export enum SortingStrategy {
 // }
 
 const LIMIT_TIME_DIFF_MS = 60 * 60 * 1000;
-const AVG_DAILY_NOTES = 3;
+// const AVG_DAILY_NOTES = 3;
 const HEAT_SCALE=10;
 export interface NoteAttributes {
     note: TFile;
@@ -153,7 +154,7 @@ export class TimeIndex implements ITimeIndex {
         });
 
         // this formula is logaritmic
-        const heat = Math.log(items.length+1)/Math.log(AVG_DAILY_NOTES*HEAT_SCALE);
+        const heat = Math.log(items.length+1)/Math.log(getChronologySettings().avgDailyNotes*HEAT_SCALE);
 
         return heat;
     }
