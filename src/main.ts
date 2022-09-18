@@ -3,7 +3,6 @@ import { CalendarView, CALENDAR_VIEW } from './Views/CalendarView';
 import { App, Modal, Plugin } from 'obsidian';
 import { ChronologySettingTab } from 'src/ChronologySettingTab';
 
-// Remember to rename these classes and interfaces!
 
 interface ChronologyPluginSettings {
     addRibbonIcon: boolean;
@@ -40,7 +39,6 @@ export default class ChronologyPlugin extends Plugin {
             });
             ribbonIconEl.addClass('my-plugin-ribbon-class');
         }
-        // Perform additional things with the ribbon
 
         
         this.app.workspace.onLayoutReady(()=>{
@@ -57,20 +55,6 @@ export default class ChronologyPlugin extends Plugin {
 
         
         this.addSettingTab(new ChronologySettingTab(this.app, this));
-
-
-        // if (this.app.workspace.layoutReady) {
-        //     this.activateView();
-        // } else {
-        //     this.registerEvent(
-        //         this.app.workspace.on('something',
-        //             () => {
-        //                 console.log('something');
-        //                 this.activateView();
-        //             }
-        //         )
-        //     );
-        // }
 
 
     }

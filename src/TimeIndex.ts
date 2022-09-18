@@ -1,6 +1,5 @@
 import { getChronologySettings } from 'src/main';
 
-// import { moment } from "obsidian";
 import { App, TFile, moment } from "obsidian";
 import { CalendarItem, CalendarItemType } from "./CalendarType";
 
@@ -21,15 +20,8 @@ export enum SortingStrategy {
     Mixed
 }
 
-// const AttributesMatches = {
-//     "truefalse": DateAttribute.Created,
-//     "falsetrue": DateAttribute.Modified,
-//     "truetrue": DateAttribute.Both,
-//     "falsefalse": -1
-// }
 
 const LIMIT_TIME_DIFF_MS = 60 * 60 * 1000;
-// const AVG_DAILY_NOTES = 3;
 const HEAT_SCALE=10;
 export interface NoteAttributes {
     note: TFile;
@@ -37,9 +29,6 @@ export interface NoteAttributes {
     attribute: DateAttribute;
 }
 
-// export interface NoteAttributesSorted extends NoteAttributes {
-//     sortedBy: DateAttribute
-// }
 
 export class TimeIndex implements ITimeIndex {
 

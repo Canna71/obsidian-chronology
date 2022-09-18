@@ -70,19 +70,8 @@ export class CalendarView extends ItemView {
 
 	async onOpen() {
 		const { contentEl } = this;
-		// contentEl.setText('Woah!');
-		// this.titleEl.setText("Obsidian Janitor")	
 		this.root = createRoot(contentEl/*.children[1]*/);
 		this.render();
-        // const onChange = debounce(
-        //     (file:TFile)=>{
-        //         console.log("onChanged 1");
-
-        //         //this.onVaultChanged(file);
-        //         console.log("onChanged 2");
-        //     }
-            
-        //     ,300,true);
         this.app.vault.on("modify", this.onVaultChanged);
         this.app.vault.on("create", this.onVaultChanged);
         this.app.vault.on("delete", this.onVaultChanged);

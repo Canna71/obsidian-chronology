@@ -95,7 +95,6 @@ export const ExpandableNoteList = ({ items, onOpen }: {
 
 
 function getClusteringStrategy() {
-    //let clusteringStrategies: { 0: { slots: string[]; clusters: string[]; slotFn: (item: NoteAttributes) => string; clusterFn: (item: NoteAttributes) => string; }; 1: { slots: string[]; clusters: string[]; slotFn: (item: NoteAttributes) => string; clusterFn: (item: NoteAttributes) => string; }; 2: undefined; 3: undefined; };
 
 
     const clusteringStrategies = {
@@ -204,10 +203,6 @@ function clusterize(items: NoteAttributes[],
             })
         );
 
-        // let clustersWithData = clusters.map(cluster=>({
-        //     cluster,
-        //     items:  clusterBy[cluster]       
-        // })) 
         return ({
             slot: slot.slot,
             clusters: clusterList

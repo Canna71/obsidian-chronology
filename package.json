@@ -1,7 +1,7 @@
 {
 	"name": "obsidian-chronologyn",
 	"version": "1.0.0",
-	"description": "Enables to have a calendat and a timeline of the activities",
+	"description": "Obsidian.md plugin that Provides a calendar and a timeline of the activities",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
