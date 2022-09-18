@@ -3,7 +3,7 @@
 	"name": "Chronology",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Enables to have a calendat and a timeline of the activities",
+	"description": "Provides a calendar and a timeline of the activities",
 	"author": "Gabriele Cannata",
 	"authorUrl": "https://github.com/Canna71",
 	"isDesktopOnly": false
