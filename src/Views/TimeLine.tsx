@@ -1,5 +1,5 @@
 
-import { TFile, moment } from "obsidian";
+import { TFile, moment, Platform } from "obsidian";
 import * as  React from "react";
 import { useCallback } from "react";
 import { getChronologySettings } from "src/main";
@@ -8,12 +8,9 @@ import { groupBy, range } from "src/utils";
 import { CalendarItem, CalendarItemType } from "../CalendarType";
 import { DateAttribute, NoteAttributes } from "../TimeIndex";
 
-function isMacOS() {
-    return navigator.userAgent.indexOf("Mac") !== -1;
-}
 
 function isMetaPressed(e: MouseEvent): boolean {
-    return isMacOS() ? e.metaKey : e.ctrlKey;
+    return Platform.isMacOS ? e.metaKey : e.ctrlKey;
 }
 
 const Badge = ({ attribute, time }: { attribute: DateAttribute, time: moment.Moment }) => {
