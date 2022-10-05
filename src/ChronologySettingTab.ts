@@ -17,10 +17,24 @@ export class ChronologySettingTab extends PluginSettingTab {
 
 		containerEl.createEl('h2', {text: 'Chronology Settings'});
 
-		this.createToggle(containerEl, "Add Ribbon Icon",
-            "Adds an icon to the ribbon to launch scan",
-            "addRibbonIcon"
-        );
+		
+
+        new Setting(containerEl)
+			.setName("Add Ribbon Icon")
+			.setDesc("Adds an icon to the ribbon to launch scan")
+			.addToggle(bool => bool
+				.setValue(this.plugin.settings.addRibbonIcon)
+				.onChange(async (value) => {
+					this.plugin.settings.addRibbonIcon = value;
+					await this.plugin.saveSettings();
+                    if(value){
+                        this.plugin.addIcon();
+                    } else {
+                        this.plugin.removeIcon();
+                    }
+					this.display();
+				})
+			);
 
         this.createToggle(containerEl, "Open on start up",
             "Opens the chronology sidebar when Obsidian starts.",

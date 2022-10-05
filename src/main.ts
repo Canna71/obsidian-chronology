@@ -24,6 +24,7 @@ export function getChronologySettings(){return expSettings;}
 
 export default class ChronologyPlugin extends Plugin {
     settings: ChronologyPluginSettings;
+    ribbonIconEl: HTMLElement;
 
     async onload() {
         await this.loadSettings();
@@ -34,10 +35,7 @@ export default class ChronologyPlugin extends Plugin {
         );
 
         if(this.settings.addRibbonIcon){
-            const ribbonIconEl = this.addRibbonIcon('clock', 'Open Chronology', (evt: MouseEvent) => {
-                this.activateView();
-            });
-            ribbonIconEl.addClass('my-plugin-ribbon-class');
+            this.addIcon();
         }
 
         
@@ -57,6 +55,19 @@ export default class ChronologyPlugin extends Plugin {
         this.addSettingTab(new ChronologySettingTab(this.app, this));
 
 
+    }
+
+    public addIcon() {
+        this.ribbonIconEl = this.addRibbonIcon('clock', 'Open Chronology', (evt: MouseEvent) => {
+            this.activateView();
+        });
+        this.ribbonIconEl.addClass('chronology-ribbon-class');
+    }
+
+    public removeIcon(){
+        if(this.ribbonIconEl){
+            this.ribbonIconEl.remove();
+        }
     }
 
     onunload() {
