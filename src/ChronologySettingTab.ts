@@ -21,7 +21,7 @@ export class ChronologySettingTab extends PluginSettingTab {
 
         new Setting(containerEl)
 			.setName("Add Ribbon Icon")
-			.setDesc("Adds an icon to the ribbon to launch scan")
+			.setDesc("Adds an icon to the ribbon to open sidebar")
 			.addToggle(bool => bool
 				.setValue(this.plugin.settings.addRibbonIcon)
 				.onChange(async (value) => {
