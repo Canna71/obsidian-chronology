@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-chronologyn",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Obsidian.md plugin that Provides a calendar and a timeline of the notes creation and modification",
 	"main": "main.js",
 	"scripts": {
