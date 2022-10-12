@@ -89,7 +89,6 @@ export default class ChronologyPlugin extends Plugin {
         // this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
 
         let leaf = this.app.workspace.getLeavesOfType(CALENDAR_VIEW)[0];
-        console.log("CalendarView ", leaf);
         if (!leaf) {
             await this.app.workspace.getRightLeaf(false).setViewState({
                 type: CALENDAR_VIEW,
