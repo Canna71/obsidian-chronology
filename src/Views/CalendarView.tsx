@@ -18,8 +18,7 @@ export class CalendarView extends ItemView {
 		date: {
 			date: moment(),
 			type: CalendarItemType.Day
-		},
-        vaultVer: 0
+		}
 	};
 
 
@@ -31,8 +30,7 @@ export class CalendarView extends ItemView {
 				date: moment(),
 				type: CalendarItemType.Day,
 
-			},
-            vaultVer: 0
+			}
 		};
         this.icon = "clock";
 	}

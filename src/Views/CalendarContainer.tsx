@@ -9,12 +9,11 @@ import { TimeLine } from "./TimeLine"
 export interface CalendarContainerProps {
 	date: CalendarItem;
     onOpen: (note:TFile, paneType: PaneType | boolean)=>void;
-    vaultVer: number;
 }
 
 
 
-export const CalendarContainer = ({date, onOpen, vaultVer}:CalendarContainerProps) => { 
+export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => { 
 
 	const timeIndex = React.useContext(TimeIndexContext);
 	const [current, setDate] = React.useState(date);
