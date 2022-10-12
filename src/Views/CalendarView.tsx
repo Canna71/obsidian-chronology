@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { debounce, moment, TFile } from "obsidian";
+import { debounce, moment, PaneType, TFile } from "obsidian";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
@@ -47,8 +47,8 @@ export class CalendarView extends ItemView {
 		return "Chronology";
 	}
 
-	async openNote(note:TFile, newLeaf=false){
-        const leaf = app.workspace.getLeaf(newLeaf);
+	async openNote(note:TFile, paneType: PaneType | boolean = false){
+        const leaf = app.workspace.getLeaf(paneType);
         await leaf.openFile(note);
     }
 

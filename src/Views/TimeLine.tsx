@@ -1,5 +1,5 @@
 
-import { TFile, moment, Platform } from "obsidian";
+import { TFile, moment, Keymap, PaneType } from "obsidian";
 import * as  React from "react";
 import { useCallback } from "react";
 import { getChronologySettings } from "src/main";
@@ -8,10 +8,6 @@ import { groupBy, range } from "src/utils";
 import { CalendarItem, CalendarItemType } from "../CalendarType";
 import { DateAttribute, NoteAttributes } from "../TimeIndex";
 
-
-function isMetaPressed(e: MouseEvent): boolean {
-    return Platform.isMacOS ? e.metaKey : e.ctrlKey;
-}
 
 const Badge = ({ attribute, time }: { attribute: DateAttribute, time: moment.Moment }) => {
 
@@ -25,13 +21,14 @@ const Badge = ({ attribute, time }: { attribute: DateAttribute, time: moment.Mom
     }
 }
 
-const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile, newLeaf: boolean) => void }) => {
+const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile, paneType: PaneType | boolean) => void }) => {
 
 
     const onClick = useCallback(
         (event: React.MouseEvent<HTMLElement>) => {
+            const paneType = Keymap.isModEvent(event.nativeEvent);
 
-            onOpen(item.note, isMetaPressed(event.nativeEvent));
+            onOpen(item.note, paneType);
         }
         , [item, onOpen]);
 
@@ -54,7 +51,7 @@ const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile
 
 export const ExpandableNoteList = ({ items, onOpen }: {
     items: NoteAttributes[],
-    onOpen: (note: TFile, newLeaf: boolean) => void
+    onOpen: (note: TFile, paneType: PaneType | boolean) => void
 }) => {
 
     const [expanded, setExpanded] = React.useState(false)
@@ -120,7 +117,7 @@ export const TimeLine = ({ calItem, items, onOpen }:
     {
         calItem: CalendarItem,
         items: NoteAttributes[],
-        onOpen: (note: TFile, newLeaf: boolean) => void
+        onOpen: (note: TFile, paneType: PaneType | boolean) => void
     }) => {
 
     const clusterStrat = getClusteringStrategy()[calItem.type];

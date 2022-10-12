@@ -24,7 +24,7 @@ export function getChronologySettings(){return expSettings;}
 
 export default class ChronologyPlugin extends Plugin {
     settings: ChronologyPluginSettings;
-    ribbonIconEl: HTMLElement;
+    ribbonIconEl: HTMLElement | null;
 
     async onload() {
         await this.loadSettings();
@@ -58,6 +58,7 @@ export default class ChronologyPlugin extends Plugin {
     }
 
     public addIcon() {
+        this.removeIcon();
         this.ribbonIconEl = this.addRibbonIcon('clock', 'Open Chronology', (evt: MouseEvent) => {
             this.activateView();
         });
@@ -67,11 +68,12 @@ export default class ChronologyPlugin extends Plugin {
     public removeIcon(){
         if(this.ribbonIconEl){
             this.ribbonIconEl.remove();
+            this.ribbonIconEl = null;
         }
     }
 
     onunload() {
-        this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
+        // this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
     }
 
     async loadSettings() {
@@ -84,16 +86,20 @@ export default class ChronologyPlugin extends Plugin {
     }
 
     async activateView() {
-        this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
+        // this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
 
-        await this.app.workspace.getRightLeaf(false).setViewState({
-            type: CALENDAR_VIEW,
-            active: true
-        }, {
-            settings: this.settings
-        });
+        let leaf = this.app.workspace.getLeavesOfType(CALENDAR_VIEW)[0];
+        console.log("CalendarView ", leaf);
+        if (!leaf) {
+            await this.app.workspace.getRightLeaf(false).setViewState({
+                type: CALENDAR_VIEW,
+                active: true
+            });
+            leaf = this.app.workspace.getLeavesOfType(CALENDAR_VIEW)[0];
+        }
 
-        this.app.workspace.revealLeaf(
+
+        leaf && this.app.workspace.revealLeaf(
             this.app.workspace.getLeavesOfType(CALENDAR_VIEW)[0]
         );
     }

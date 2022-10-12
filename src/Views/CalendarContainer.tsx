@@ -1,5 +1,5 @@
 
-import { TFile } from "obsidian";
+import { PaneType, TFile } from "obsidian";
 import * as React from "react";
 import { useCallback } from "react";
 import { CalendarItem } from "src/CalendarType";
@@ -8,7 +8,7 @@ import { TimeIndexContext } from "./CalendarView";
 import { TimeLine } from "./TimeLine"
 export interface CalendarContainerProps {
 	date: CalendarItem;
-    onOpen: (note:TFile, newLeaf: boolean)=>void;
+    onOpen: (note:TFile, paneType: PaneType | boolean)=>void;
     vaultVer: number;
 }
 
@@ -31,8 +31,8 @@ export const CalendarContainer = ({date, onOpen, vaultVer}:CalendarContainerProp
 
     
 
-    const handleOpen = useCallback((note:TFile, newLeaf:boolean)=>{
-        onOpen(note, newLeaf);
+    const handleOpen = useCallback((note:TFile, paneType: PaneType | boolean)=>{
+        onOpen(note, paneType);
     },[onOpen]);
 
 	return (
