@@ -9,13 +9,15 @@ interface ChronologyPluginSettings {
     launchOnStartup: boolean;
     use24Hours: boolean;
     avgDailyNotes: number;
+    useTimeline: boolean;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
     addRibbonIcon: true,
     launchOnStartup: true,
     use24Hours: true,
-    avgDailyNotes: 3
+    avgDailyNotes: 3,
+    useTimeline: true
 }
 
 let expSettings: ChronologyPluginSettings;
@@ -98,9 +100,7 @@ export default class ChronologyPlugin extends Plugin {
         }
 
 
-        leaf && this.app.workspace.revealLeaf(
-            this.app.workspace.getLeavesOfType(CALENDAR_VIEW)[0]
-        );
+        leaf && this.app.workspace.revealLeaf(leaf);
     }
 }
 

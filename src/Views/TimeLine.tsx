@@ -1,5 +1,5 @@
 
-import { TFile, moment, Keymap, PaneType } from "obsidian";
+import { TFile, moment, PaneType } from "obsidian";
 import * as  React from "react";
 import { useCallback } from "react";
 import { getChronologySettings } from "src/main";
@@ -7,9 +7,10 @@ import { groupBy, range } from "src/utils";
 
 import { CalendarItem, CalendarItemType } from "../CalendarType";
 import { DateAttribute, NoteAttributes } from "../TimeIndex";
+import { NoteView } from "./NoteView";
 
 
-const Badge = ({ attribute, time }: { attribute: DateAttribute, time: moment.Moment }) => {
+export const Badge = ({ attribute, time }: { attribute: DateAttribute, time: moment.Moment }) => {
 
 
     if (attribute === DateAttribute.Created) {
@@ -19,34 +20,6 @@ const Badge = ({ attribute, time }: { attribute: DateAttribute, time: moment.Mom
         return <div className="chrono-badge chrono-modified" title="Modified" ></div>
 
     }
-}
-
-const NoteView = ({ item, onOpen }: { item: NoteAttributes, onOpen: (note: TFile, paneType: PaneType | boolean) => void }) => {
-
-
-    const onClick = useCallback(
-        (event: React.MouseEvent<HTMLElement>) => {
-            const paneType = Keymap.isModEvent(event.nativeEvent);
-
-            onOpen(item.note, paneType);
-        }
-        , [item, onOpen]);
-
-    const time = moment(item.time);
-
-    const desc = `${item.attribute === DateAttribute.Created ? "Created" : "Modified"} ${time.format("LLL")}`;
-
-    return (
-        <div
-            data-text={desc}
-            className="chrono-temp-note"
-            onClick={onClick}
-            key={item.note.path}>
-            <span className="chrono-note-time">{time.format("LT")}</span>
-            <Badge attribute={item.attribute} time={time} />
-            {item.note.basename}
-        </div>
-    )
 }
 
 export const ExpandableNoteList = ({ items, onOpen }: {
@@ -81,7 +54,7 @@ export const ExpandableNoteList = ({ items, onOpen }: {
     return (
         <div className="chrono-cluster-container">
             {items && items.map(item =>
-                <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} />
+                <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} extraInfo={true} />
             )}
         </div>
     );
