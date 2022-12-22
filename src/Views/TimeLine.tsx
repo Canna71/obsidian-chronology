@@ -93,6 +93,8 @@ export const TimeLine = ({ calItem, items, onOpen }:
         onOpen: (note: TFile, paneType: PaneType | boolean) => void
     }) => {
 
+    if(calItem.type == CalendarItemType.Range) return (<div></div>);    
+    
     const clusterStrat = getClusteringStrategy()[calItem.type];
     if(!clusterStrat){
         return (

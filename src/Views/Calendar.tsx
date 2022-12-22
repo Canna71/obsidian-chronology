@@ -8,7 +8,7 @@ import { TimeIndexContext } from "./CalendarView";
 
 export interface CalendarViewProps {
     current: CalendarItem;
-    onChange: (sel: CalendarItem) => void;
+    onChange: (sel: CalendarItem, isDelta: boolean) => void;
 }
 
 
@@ -18,7 +18,7 @@ export interface CalendarViewProps {
 interface CalendarCellProps {
     value: CalendarItem;
     current: CalendarItem;
-    onChange: (value: CalendarItem) => void
+    onChange: (value: CalendarItem, delta:boolean) => void
 }
 
 const Cell = ({ value, current, onChange }: CalendarCellProps) => {
@@ -26,10 +26,11 @@ const Cell = ({ value, current, onChange }: CalendarCellProps) => {
     const timeIndex = React.useContext(TimeIndexContext);
 
     const handleChange = useCallback(
-        () => {
+        (e:React.MouseEvent) => {
+            const isDelta = e.shiftKey;
             // avoid triggering a pointless change. This works also for week numbers
             if (!current.date.isSame(value.date, "day") || current.type !== value.type) {
-                onChange(value);
+                onChange(value, isDelta);
             }
         },
         [value],
@@ -78,7 +79,7 @@ const Cell = ({ value, current, onChange }: CalendarCellProps) => {
 
 }
 
-const Week = ({ weekNumber, current, onChange }: { weekNumber: number, current: CalendarItem, onChange: (value: CalendarItem) => void }) => {
+const Week = ({ weekNumber, current, onChange }: { weekNumber: number, current: CalendarItem, onChange: (value: CalendarItem, isDelta:boolean) => void }) => {
 
     const weekStart = moment().weekday(0).format("dddd");
     const firstDayOfWeek = moment().day(weekStart).week(weekNumber);
@@ -135,23 +136,23 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
     const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek);
 
-    const handleChange = useCallback((value: CalendarItem) => {
-        onChange(value);
+    const handleChange = useCallback((value: CalendarItem, isDelta: boolean) => {
+        onChange(value, isDelta);
     }, [onChange]);
 
     const selectMonth = useCallback(() => {
         // return;
-        onChange(new CalendarItem(currentDate, CalendarItemType.Month));
+        onChange(new CalendarItem(currentDate, CalendarItemType.Month), false);
     }, [monthName]);
 
     const selectYear = useCallback(() => {
         return;
-        onChange(new CalendarItem(currentDate, CalendarItemType.Year));
+        onChange(new CalendarItem(currentDate, CalendarItemType.Year), false);
     }, [monthName]);
 
     const shiftMonth = (diff: number) => useCallback(() => {
 
-        onChange(new CalendarItem(moment(currentDate).startOf("month").add(diff, "month"), CalendarItemType.Month));
+        onChange(new CalendarItem(moment(currentDate).startOf("month").add(diff, "month"), CalendarItemType.Month), false);
     }, [diff, currentDate, onChange]);
 
     const monthClasses = ["chronology-calendar-selectable"];

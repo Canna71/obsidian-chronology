@@ -23,7 +23,8 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
     const notes = timeIndex.getNotesForCalendarItem(current);
 
 	const handleChange = useCallback(
-		(value:CalendarItem) => {
+		(value:CalendarItem, isDelta: boolean) => {
+            console.log("isDelta: ", isDelta)
 			setDate(value);
 		},
 		[setDate],

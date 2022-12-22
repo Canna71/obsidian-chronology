@@ -4,7 +4,8 @@ export enum CalendarItemType {
 	Day,
 	Week,
 	Month,
-	Year
+	Year,
+    Range
 }
 
 export class CalendarItem {
