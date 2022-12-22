@@ -2,7 +2,7 @@
 import { PaneType, TFile } from "obsidian";
 import * as React from "react";
 import { useCallback } from "react";
-import { CalendarItem } from "src/CalendarType";
+import { CalendarItem, CalendarItemType } from "src/CalendarType";
 import { getChronologySettings } from "src/main";
 import { Calendar } from "./Calendar";
 import { TimeIndexContext } from "./CalendarView";
@@ -31,7 +31,7 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 
     const settings = getChronologySettings();
     
-    const useList = !settings.useTimeline;
+    const useList = !settings.useTimeline || current.type == CalendarItemType.Month;
 
     const handleOpen = useCallback((note:TFile, paneType: PaneType | boolean)=>{
         onOpen(note, paneType);

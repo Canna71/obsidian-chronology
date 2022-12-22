@@ -140,7 +140,7 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     }, [onChange]);
 
     const selectMonth = useCallback(() => {
-        return;
+        // return;
         onChange(new CalendarItem(currentDate, CalendarItemType.Month));
     }, [monthName]);
 
@@ -154,7 +154,7 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
         onChange(new CalendarItem(moment(currentDate).startOf("month").add(diff, "month"), CalendarItemType.Month));
     }, [diff, currentDate, onChange]);
 
-    const monthClasses = [/*"chronology-calendar-selectable"*/];
+    const monthClasses = ["chronology-calendar-selectable"];
     if (current.type === CalendarItemType.Month) {
         monthClasses.push("selected");
     }

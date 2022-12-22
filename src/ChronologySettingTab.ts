@@ -59,6 +59,10 @@ export class ChronologySettingTab extends PluginSettingTab {
                 })
                 
             })
+        this.createToggle(containerEl, "Display Timelime",
+            "Prefers a time line view of notes, for day and week view",
+            "useTimeline"
+        );
 	}
 
 
