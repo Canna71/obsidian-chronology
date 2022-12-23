@@ -37,7 +37,7 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 
     const settings = getChronologySettings();
     
-    const useList = !settings.useTimeline || current.type == CalendarItemType.Month || current.type == CalendarItemType.Range;
+    const useList = settings.useSimpleList || current.type == CalendarItemType.Month || current.type == CalendarItemType.Range;
 
     const handleOpen = useCallback((note:TFile, paneType: PaneType | boolean)=>{
         onOpen(note, paneType);

@@ -9,7 +9,7 @@ interface ChronologyPluginSettings {
     launchOnStartup: boolean;
     use24Hours: boolean;
     avgDailyNotes: number;
-    useTimeline: boolean;
+    useSimpleList: boolean;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
@@ -17,7 +17,7 @@ const DEFAULT_SETTINGS: ChronologyPluginSettings = {
     launchOnStartup: true,
     use24Hours: true,
     avgDailyNotes: 3,
-    useTimeline: true
+    useSimpleList: false
 }
 
 let expSettings: ChronologyPluginSettings;
