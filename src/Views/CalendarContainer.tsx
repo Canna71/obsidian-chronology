@@ -25,7 +25,6 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 	const handleChange = useCallback(
 		(value:CalendarItem, isDelta: boolean) => {
             setDate(current=>{
-                console.log("isDelta: ", isDelta)
                 if(isDelta){
                     return (new CalendarItem(current.date,CalendarItemType.Range,value.date));
                 } else {

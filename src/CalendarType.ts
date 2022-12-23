@@ -45,7 +45,6 @@ export class CalendarItem {
     isInRange(date: moment.Moment) {
         const { fromTime, toTime } = this.getTimeRange();
         const inRange = fromTime.isSameOrBefore(date) && toTime?.isSameOrAfter(date);
-        console.log(date.toString(),fromTime.toString(), toTime?.toString(), inRange)
         return inRange;
     }
 
