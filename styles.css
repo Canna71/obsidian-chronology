@@ -91,8 +91,8 @@ If your plugin does not need CSS, delete this file.
 }
 
 
-.chronology-cell-other-months {
-    color: var(--text-faint);
+.chronology-other-month {
+    color: var(--text-muted);
 }
 
 
