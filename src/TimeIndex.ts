@@ -1,7 +1,7 @@
 import { getChronologySettings } from 'src/main';
 
 import { App, TFile, moment } from "obsidian";
-import { CalendarItem, CalendarItemType } from "./CalendarType";
+import { CalendarItem } from "./CalendarType";
 
 export interface ITimeIndex {
     getHeatForDate(date: string): number;
@@ -36,12 +36,12 @@ export class TimeIndex implements ITimeIndex {
 
     constructor(app: App) {
         this.app = app;
-    }
+    } 
 
     getNotesForCalendarItem(item: CalendarItem, sortingStrategy = SortingStrategy.Mixed, desc = true): NoteAttributes[] {
         const allNotes = this.app.vault.getMarkdownFiles();
-        const { fromTime, toTime } = this.getTimeRange(item);
-
+        const { fromTime, toTime } = item.getTimeRange();
+ 
         let notes = allNotes.reduce<NoteAttributes[]>((acc, note) => {
             const createdTime = moment(note.stat.ctime);
             const modifiedTime = moment(note.stat.mtime);
@@ -94,34 +94,34 @@ export class TimeIndex implements ITimeIndex {
         return notes;
     }
 
-    private getTimeRange(item: CalendarItem) {
-        let fromTime: moment.Moment, toTime: moment.Moment;
+    // private getTimeRange(item: CalendarItem) {
+    //     let fromTime: moment.Moment, toTime: moment.Moment;
 
-        function getMomentTimeRange(period: moment.unitOfTime.StartOf) {
-            fromTime = moment(item.date).startOf(period);
-            toTime = moment(item.date).endOf(period);
-            return { fromTime, toTime };
-        }
+    //     function getMomentTimeRange(period: moment.unitOfTime.StartOf) {
+    //         fromTime = moment(item.date).startOf(period);
+    //         toTime = moment(item.date).endOf(period);
+    //         return { fromTime, toTime };
+    //     }
 
-        switch (item.type) {
-            case (CalendarItemType.Year):
-                return getMomentTimeRange("year");
-                break;
-            case (CalendarItemType.Month):
-                return getMomentTimeRange("month");
-                break;
-            case (CalendarItemType.Week):
-                return getMomentTimeRange("week");
-                break;
-            case (CalendarItemType.Day):
-                return getMomentTimeRange("day");
-                break;
-            default:
-                throw new Error("Unknown Calendar Item Type!!!");
-                break;
-        }
+    //     switch (item.type) {
+    //         case (CalendarItemType.Year):
+    //             return getMomentTimeRange("year");
+    //             break;
+    //         case (CalendarItemType.Month):
+    //             return getMomentTimeRange("month");
+    //             break;
+    //         case (CalendarItemType.Week):
+    //             return getMomentTimeRange("week");
+    //             break;
+    //         case (CalendarItemType.Day):
+    //             return getMomentTimeRange("day");
+    //             break;
+    //         default:
+    //             throw new Error("Unknown Calendar Item Type!!!");
+    //             break;
+    //     }
 
-    }
+    // }
 
     sortNotes(items: NoteAttributes[], sortingStrategy: SortingStrategy, desc = false): NoteAttributes[] {
         const res = items.sort((a,b)=>
@@ -137,10 +137,7 @@ export class TimeIndex implements ITimeIndex {
     getHeatForDate(date: string | moment.Moment): number {
         const mom = moment(date);
 
-        const items = this.getNotesForCalendarItem({
-            date: mom,
-            type: CalendarItemType.Day
-        });
+        const items = this.getNotesForCalendarItem(new CalendarItem(mom));
 
         // this formula is logaritmic
         const heat = Math.log(items.length+1)/Math.log(getChronologySettings().avgDailyNotes*HEAT_SCALE);

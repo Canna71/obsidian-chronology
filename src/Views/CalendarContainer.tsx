@@ -25,14 +25,18 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 	const handleChange = useCallback(
 		(value:CalendarItem, isDelta: boolean) => {
             console.log("isDelta: ", isDelta)
-			setDate(value);
+            if(isDelta){
+                setDate(new CalendarItem(current.date,CalendarItemType.Range,value.date));
+            } else {
+                setDate(value);
+            }
 		},
 		[setDate],
 	)
 
     const settings = getChronologySettings();
     
-    const useList = !settings.useTimeline || current.type == CalendarItemType.Month;
+    const useList = !settings.useTimeline || current.type == CalendarItemType.Month || current.type == CalendarItemType.Range;
 
     const handleOpen = useCallback((note:TFile, paneType: PaneType | boolean)=>{
         onOpen(note, paneType);

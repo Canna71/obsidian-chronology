@@ -3,7 +3,7 @@ import { debounce, moment, PaneType, TFile } from "obsidian";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
-import { CalendarItemType } from "src/CalendarType";
+import { CalendarItem } from "src/CalendarType";
 import { ITimeIndex, MockTimeIndex, TimeIndex } from "src/TimeIndex";
 import { CalendarContainer } from "./CalendarContainer";
 export const CALENDAR_VIEW = "chronology-calendar-view";
@@ -11,26 +11,18 @@ export const CALENDAR_VIEW = "chronology-calendar-view";
 
 export const TimeIndexContext = React.createContext<ITimeIndex>(new MockTimeIndex());
 
-export class CalendarView extends ItemView {
+export class CalendarView extends ItemView { 
 
 	root: Root;
 	state= {
-		date: {
-			date: moment(),
-			type: CalendarItemType.Day
-		}
+		date: new CalendarItem(moment())
 	};
-
 
 
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
 		this.state = {
-			date: { 
-				date: moment(),
-				type: CalendarItemType.Day,
-
-			}
+			date: new CalendarItem(moment())
 		};
         this.icon = "clock";
 	}
