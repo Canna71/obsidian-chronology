@@ -62,6 +62,9 @@ const Cell = ({ value, current, onChange }: CalendarCellProps) => {
 
         if (current.type === CalendarItemType.Day && itemDate.isSame(currendDate, "day")) {
             classes.push("selected")
+        } 
+        if(current.type === CalendarItemType.Range && current.isInRange(itemDate)){
+            classes.push("selected")
         }
 
         const heatLevel = timeIndex.getHeatForDate(itemDate.format("YYYY-MM-DD"));

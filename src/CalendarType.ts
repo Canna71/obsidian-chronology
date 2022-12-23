@@ -21,13 +21,13 @@ export class CalendarItem {
         type = CalendarItemType.Day,
         toDate?: moment.Moment
     ) {
-        this.date = date;
+        this.date = date.clone().startOf("day");
         this.type = type;
-        this.toDate = toDate;
+        this.toDate = toDate?.endOf("day");
         if (this.toDate) {
             this.type = CalendarItemType.Range;
             if(this.toDate.isBefore(this.date)) {
-                [this.date, this.toDate] = [this.toDate, this.date];
+                [this.date, this.toDate] = [this.toDate.startOf("day"), this.date.endOf("day")];
             } 
         }
     }
@@ -40,6 +40,13 @@ export class CalendarItem {
         const fromTime = moment(this.date).startOf(period);
         const toTime = moment(this.date).endOf(period);
         return { fromTime, toTime };
+    }
+
+    isInRange(date: moment.Moment) {
+        const { fromTime, toTime } = this.getTimeRange();
+        const inRange = fromTime.isSameOrBefore(date) && toTime?.isSameOrAfter(date);
+        console.log(date.toString(),fromTime.toString(), toTime?.toString(), inRange)
+        return inRange;
     }
 
     getTimeRange() {
