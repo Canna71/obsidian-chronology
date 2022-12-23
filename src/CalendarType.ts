@@ -28,7 +28,7 @@ export class CalendarItem {
             this.type = CalendarItemType.Range;
             if(this.toDate.isBefore(this.date)) {
                 [this.date, this.toDate] = [this.toDate, this.date];
-            }
+            } 
         }
     }
 

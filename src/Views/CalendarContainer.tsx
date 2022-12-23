@@ -24,12 +24,14 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 
 	const handleChange = useCallback(
 		(value:CalendarItem, isDelta: boolean) => {
-            console.log("isDelta: ", isDelta)
-            if(isDelta){
-                setDate(new CalendarItem(current.date,CalendarItemType.Range,value.date));
-            } else {
-                setDate(value);
-            }
+            setDate(current=>{
+                console.log("isDelta: ", isDelta)
+                if(isDelta){
+                    return (new CalendarItem(current.date,CalendarItemType.Range,value.date));
+                } else {
+                    return (value);
+                }
+            })
 		},
 		[setDate],
 	)
