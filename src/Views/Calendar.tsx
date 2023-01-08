@@ -119,13 +119,16 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
     const currentDate = current.date;
 
-    const weekStart = current.date.clone().weekday(0).format("dddd");
+     const weekStart = current.date.clone().weekday(0).format("dddd");
     const firstOfMonth = currentDate.clone().startOf("month");
     const endOfMonth = currentDate.clone().endOf("month");
     const monthName = currentDate.format("MMMM");
     const yearName = currentDate.format("YYYY");
-    const startWeek = firstOfMonth.week();
+    let startWeek = firstOfMonth.week();
     const endWeek = endOfMonth.week();
+
+    if (startWeek > endWeek) startWeek = 0;
+
     const firstDayOGrid = current.date.clone().day(weekStart).week(startWeek);
     // const lastDayOfGrid = moment().day(weekStart).week(endWeek).endOf("week");
 
