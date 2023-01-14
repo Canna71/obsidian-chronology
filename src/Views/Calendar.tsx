@@ -82,11 +82,13 @@ const Cell = ({ value, current, onChange }: CalendarCellProps) => {
 
 }
 
-const Week = ({ weekNumber, current, onChange }: { weekNumber: number, current: CalendarItem, onChange: (value: CalendarItem, isDelta:boolean) => void }) => {
+const Week = ({ week, current, onChange }: { week: number[], current: CalendarItem, onChange: (value: CalendarItem, isDelta:boolean) => void }) => {
 
-    const weekStart = current.date.clone().weekday(0).format("dddd");
-    const firstDayOfWeek = current.date.clone().day(weekStart).week(weekNumber);
-    const lastDayOfWeek = current.date.clone().day(weekStart).week(weekNumber).endOf("week");
+    const [year, weekNumber] = week;
+    // const weekStart = current.date.clone().weekday(0).format("dddd"); 
+    // const firstDayOfWeek = current.date.clone().day(weekStart).week(weekNumber).year(year);
+    const firstDayOfWeek = moment().week(weekNumber).year(year).startOf("week");
+    const lastDayOfWeek = firstDayOfWeek.clone().endOf("week");
 
     const weekRange: CalendarItem[] = [new CalendarItem(firstDayOfWeek.clone(), CalendarItemType.Week)];
     for (let i = firstDayOfWeek.clone(); i.isBefore(lastDayOfWeek); i = i.add(1, "days")) {
@@ -118,30 +120,45 @@ const Week = ({ weekNumber, current, onChange }: { weekNumber: number, current: 
 export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
     const currentDate = current.date;
+    const endYear = currentDate.year();
+    let startYear = endYear;
 
      const weekStart = current.date.clone().weekday(0).format("dddd");
     const firstOfMonth = currentDate.clone().startOf("month");
     const endOfMonth = currentDate.clone().endOf("month");
     const monthName = currentDate.format("MMMM");
     const yearName = currentDate.format("YYYY");
-    let startWeek = firstOfMonth.week();
+    const startWeek = firstOfMonth.week();
     const endWeek = endOfMonth.week();
 
-    if (startWeek > endWeek) startWeek = 0;
+    if (startWeek > endWeek) startYear = endYear-1;
+    // 
+    // const firstDayOGrid = current.date.clone().day(weekStart).week(startWeek);
+    const firstDayOGrid = current.date.clone().day(weekStart)//.week(startWeek);
 
-    const firstDayOGrid = current.date.clone().day(weekStart).week(startWeek);
     // const lastDayOfGrid = moment().day(weekStart).week(endWeek).endOf("week");
 
     const daysOfTheWeek = [""];
-    const endofFirstFeek = firstDayOGrid.clone().endOf("week")
-    for (let d = firstDayOGrid.clone(); d.isBefore(endofFirstFeek); d = d.add(1, "days")) {
+    const endofFirstWeek = firstDayOGrid.clone().endOf("week")
+    for (let d = firstDayOGrid.clone(); d.isBefore(endofFirstWeek); d = d.add(1, "days")) {
         daysOfTheWeek.push(d.format("dd"));
     }
 
     // console.log(current.date.toString());
-
-    const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek);
-
+    let w = startWeek;
+    const monthRange = [[startYear, w]]
+    while ( (w%53) !== endWeek) {
+        w = (w+1) % 53;
+        if(w!=0) {
+            monthRange.push([endYear,w])
+        }
+    }
+    
+    console.log(monthRange);
+    // const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek)
+    //     .map((month,i)=>[ i==0?startYear:endYear, month  ])
+    // ;
+ 
     const handleChange = useCallback((value: CalendarItem, isDelta: boolean) => {
         onChange(value, isDelta);
     }, [onChange]);
@@ -203,7 +220,7 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {monthRange.map(week => <Week key={week} weekNumber={week} current={current} onChange={handleChange} />)}
+                    {monthRange.map(week => <Week key={week[1]} week={week} current={current} onChange={handleChange} />)}
                 </tbody>
             </table>
 
