@@ -120,10 +120,7 @@ const Week = ({ week, current, onChange }: { week: number[], current: CalendarIt
 export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
     const currentDate = current.date;
-    // const endYear = currentDate.year();
-    // let startYear = endYear;
-
-    //  const weekStart = current.date.clone().weekday(0).format("dddd");
+    const isToday = currentDate.isSame(moment(),"day");
     const firstOfMonth = currentDate.clone().startOf("month");
     const endOfMonth = currentDate.clone().endOf("month");
     const monthName = currentDate.format("MMMM");
@@ -131,13 +128,10 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     
     const endWeek = endOfMonth.week();
 
-    // if (startWeek > endWeek) startYear = endYear-1;
-    // 
-    // const firstDayOGrid = current.date.clone().day(weekStart).week(startWeek);
+
     const firstDayOGrid = firstOfMonth.clone().startOf("week") //.week(startWeek);
     const startWeek = firstDayOGrid.week();
     const startYear = firstDayOGrid.weekYear();
-    // const lastDayOfGrid = moment().day(weekStart).week(endWeek).endOf("week");
 
     const daysOfTheWeek = [""];
     const endofFirstWeek = firstDayOGrid.clone().endOf("week")
@@ -146,7 +140,6 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     }
     console.log(`startWeek: ${startWeek} endWeek: ${endWeek}`)
 
-    // console.log(current.date.toString());
     let w = [startYear, startWeek]; 
     const d = moment().year(w[0]).week(w[1]).startOf("week")
     const monthRange = []
@@ -157,23 +150,15 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     } 
  
 
-    
-    // while ( (w%53) !== endWeek) {
-    //     w = (w+1) % 53;
-    //     if(w!=0) {
-    //         monthRange.push([endYear,w])
-    //     }
-    //     console.log(w);
-    // }
-    
-    console.log(monthRange);
-    // const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek)
-    //     .map((month,i)=>[ i==0?startYear:endYear, month  ])
-    // ;
  
     const handleChange = useCallback((value: CalendarItem, isDelta: boolean) => {
         onChange(value, isDelta);
     }, [onChange]);
+
+    const selectToday = useCallback(() => {
+        // return;
+        onChange(new CalendarItem(moment(), CalendarItemType.Day), false);
+    }, []);
 
     const selectMonth = useCallback(() => {
         // return;
@@ -228,7 +213,13 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
                     </tr>
                     <tr>
-                        {daysOfTheWeek.map(dow => <th className="chronology-grid-dayofweek" key={dow} >{dow}</th>)}
+                        {daysOfTheWeek.map(dow => <th className="chronology-grid-dayofweek" key={dow} >
+                            {
+                                dow || !isToday && <span className="chronology-calendar-todaylink chronology-calendar-selectable" 
+                                title="today"
+                                onClick={selectToday} >⏎</span>
+                            } 
+                        </th>)}
                     </tr>
                 </thead>
                 <tbody>
