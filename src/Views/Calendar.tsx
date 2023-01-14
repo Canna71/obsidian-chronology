@@ -87,9 +87,9 @@ const Week = ({ week, current, onChange }: { week: number[], current: CalendarIt
     const [year, weekNumber] = week;
     // const weekStart = current.date.clone().weekday(0).format("dddd"); 
     // const firstDayOfWeek = current.date.clone().day(weekStart).week(weekNumber).year(year);
-    const firstDayOfWeek = moment().week(weekNumber).year(year).startOf("week");
+    const firstDayOfWeek = moment().year(year).week(weekNumber).startOf("week");
     const lastDayOfWeek = firstDayOfWeek.clone().endOf("week");
-
+ 
     const weekRange: CalendarItem[] = [new CalendarItem(firstDayOfWeek.clone(), CalendarItemType.Week)];
     for (let i = firstDayOfWeek.clone(); i.isBefore(lastDayOfWeek); i = i.add(1, "days")) {
         weekRange.push(new CalendarItem(i.clone(), CalendarItemType.Day));
@@ -120,22 +120,23 @@ const Week = ({ week, current, onChange }: { week: number[], current: CalendarIt
 export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
     const currentDate = current.date;
-    const endYear = currentDate.year();
-    let startYear = endYear;
+    // const endYear = currentDate.year();
+    // let startYear = endYear;
 
-     const weekStart = current.date.clone().weekday(0).format("dddd");
+    //  const weekStart = current.date.clone().weekday(0).format("dddd");
     const firstOfMonth = currentDate.clone().startOf("month");
     const endOfMonth = currentDate.clone().endOf("month");
     const monthName = currentDate.format("MMMM");
     const yearName = currentDate.format("YYYY");
-    const startWeek = firstOfMonth.week();
+    
     const endWeek = endOfMonth.week();
 
-    if (startWeek > endWeek) startYear = endYear-1;
+    // if (startWeek > endWeek) startYear = endYear-1;
     // 
     // const firstDayOGrid = current.date.clone().day(weekStart).week(startWeek);
-    const firstDayOGrid = current.date.clone().day(weekStart)//.week(startWeek);
-
+    const firstDayOGrid = firstOfMonth.clone().startOf("week") //.week(startWeek);
+    const startWeek = firstDayOGrid.week();
+    const startYear = firstDayOGrid.weekYear();
     // const lastDayOfGrid = moment().day(weekStart).week(endWeek).endOf("week");
 
     const daysOfTheWeek = [""];
@@ -143,16 +144,27 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     for (let d = firstDayOGrid.clone(); d.isBefore(endofFirstWeek); d = d.add(1, "days")) {
         daysOfTheWeek.push(d.format("dd"));
     }
+    console.log(`startWeek: ${startWeek} endWeek: ${endWeek}`)
 
     // console.log(current.date.toString());
-    let w = startWeek;
-    const monthRange = [[startYear, w]]
-    while ( (w%53) !== endWeek) {
-        w = (w+1) % 53;
-        if(w!=0) {
-            monthRange.push([endYear,w])
-        }
-    }
+    let w = [startYear, startWeek]; 
+    const d = moment().year(w[0]).week(w[1]).startOf("week")
+    const monthRange = []
+    while(d.isBefore(endOfMonth)) {
+        monthRange.push(w);
+        d.add(1,"week");
+        w = [d.weekYear(),d.week()]
+    } 
+ 
+
+    
+    // while ( (w%53) !== endWeek) {
+    //     w = (w+1) % 53;
+    //     if(w!=0) {
+    //         monthRange.push([endYear,w])
+    //     }
+    //     console.log(w);
+    // }
     
     console.log(monthRange);
     // const monthRange = Array.from({ length: endWeek - startWeek + 1 }, (_, i) => i + startWeek)
