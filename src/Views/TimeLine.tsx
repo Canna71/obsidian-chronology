@@ -27,7 +27,10 @@ export const ExpandableNoteList = ({ items, onOpen }: {
     onOpen: (note: TFile, paneType: PaneType | boolean) => void
 }) => {
 
-    const [expanded, setExpanded] = React.useState(false)
+    // TODO: configure
+    const startExpanded = !getChronologySettings().groupItemsInSameSlot;
+
+    const [expanded, setExpanded] = React.useState(startExpanded)
 
     const onExpand = useCallback(() => {
         setExpanded(true);

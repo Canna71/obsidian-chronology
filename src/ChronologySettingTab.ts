@@ -63,6 +63,11 @@ export class ChronologySettingTab extends PluginSettingTab {
             "Prefers a List of notes, for day and week view",
             "useSimpleList"
         );
+
+        this.createToggle(containerEl, "Group Notes in same time slot",
+        "Group notes in same time slot in the timeline view",
+        "groupItemsInSameSlot"
+    );
 	}
 
 

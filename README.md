@@ -5,6 +5,7 @@ Provides a sidebar with a calendar view of your notes.
 ![](media/demo.gif)
 
 The calendar allow to navingate and select a daily, weekly, monthly or custom range of notes. Daily and Weekly range are displayed in a time line but you can force the display of the notes in a simple list by enabline the setting `Display Simple List`.
+In the timeline visualization, you can group notes that were created or modified in the same time slot by enabling `Group Notes in same time slot`.
 
 Click the month name to see a list of all notes of that month.
 
