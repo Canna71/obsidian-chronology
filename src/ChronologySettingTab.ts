@@ -78,7 +78,7 @@ export class ChronologySettingTab extends PluginSettingTab {
                 })
                 
             })
-            
+
         this.utils.createToggle(this, containerEl, "Display Simple List",
             "Prefers a List of notes, for day and week view",
             "useSimpleList"
@@ -93,3 +93,6 @@ export class ChronologySettingTab extends PluginSettingTab {
 
     
 }
+
+
+export { UtilsChronologySettingTab };
