@@ -1,6 +1,7 @@
 
 import { App, PluginSettingTab, Setting } from "obsidian";
 import ChronologyPlugin from "./main";
+import {moment} from "obsidian";
 
 export class ChronologySettingTab extends PluginSettingTab {
 	plugin: ChronologyPlugin;
@@ -64,10 +65,34 @@ export class ChronologySettingTab extends PluginSettingTab {
             "useSimpleList"
         );
 
+        // const currentLocale = moment().locale()
+        const localeFDOW = moment().localeData().firstDayOfWeek()
+        const weekDays = moment().localeData().weekdays()
+
         this.createToggle(containerEl, "Group Notes in same time slot",
         "Group notes in same time slot in the timeline view",
         "groupItemsInSameSlot"
-    );
+        );
+        new Setting(this.containerEl)
+            .setName("First Day of the Week")
+            .setDesc(`Default will use the one from your locale (${weekDays[localeFDOW]}). A plugin restart is required.`)
+            
+            .addDropdown(dd=>{
+                
+                dd.addOption('-1', 'Default');
+                dd.addOption('6', weekDays[6]); // Saturday
+                dd.addOption('0', weekDays[0]); // Sunday
+                dd.addOption('1', weekDays[1]); // Monday
+
+                dd.setValue(this.plugin.settings.firstDayOfWeek.toString())
+                dd.onChange(async (value) =>	{
+                    this.plugin.settings.firstDayOfWeek = parseInt(value);
+                    await this.plugin.saveSettings();
+                })
+                
+                
+            })
+    
 	}
 
 

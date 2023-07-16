@@ -11,6 +11,7 @@ interface ChronologyPluginSettings {
     avgDailyNotes: number;
     useSimpleList: boolean;
     groupItemsInSameSlot: boolean;
+    firstDayOfWeek: number;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
@@ -19,7 +20,8 @@ const DEFAULT_SETTINGS: ChronologyPluginSettings = {
     use24Hours: true,
     avgDailyNotes: 3,
     useSimpleList: false,
-    groupItemsInSameSlot: false 
+    groupItemsInSameSlot: false,
+    firstDayOfWeek: -1 // locale default
 }
 
 let expSettings: ChronologyPluginSettings;
@@ -91,7 +93,6 @@ export default class ChronologyPlugin extends Plugin {
 
     async activateView() {
         // this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
-
         let leaf = this.app.workspace.getLeavesOfType(CALENDAR_VIEW)[0];
         if (!leaf) {
             await this.app.workspace.getRightLeaf(false).setViewState({

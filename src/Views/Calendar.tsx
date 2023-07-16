@@ -126,7 +126,6 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     const monthName = currentDate.format("MMMM");
     const yearName = currentDate.format("YYYY");
     
-    const endWeek = endOfMonth.week();
 
 
     const firstDayOGrid = firstOfMonth.clone().startOf("week") //.week(startWeek);
