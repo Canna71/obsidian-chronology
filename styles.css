@@ -62,13 +62,17 @@ If your plugin does not need CSS, delete this file.
     cursor: pointer;
 }
 
-.chronology-calendar-day.selected, .chronology-calendar-week-row.selected {
-    /* outline-style: solid;
-	outline-color: var(--interactive-accent-hover); */
 
-    /* background-color: var(--text-accent-hover); */
-    background-color: var(--text-highlight-bg);
+.chronology-calendar-day.selected::before, .chronology-calendar-week-row.selected::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
 
+    opacity: 0.25;
+    background-color: var(--text-accent-hover);
 }
 
 
