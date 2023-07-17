@@ -7,6 +7,7 @@ import { CalendarItem } from "src/CalendarType";
 import { ITimeIndex, MockTimeIndex, TimeIndex } from "src/TimeIndex";
 import { CalendarContainer } from "./CalendarContainer";
 import { getChronologySettings } from "src/main";
+import { myMoment } from "src/myMoment";
 export const CALENDAR_VIEW = "chronology-calendar-view";
 
 
@@ -16,36 +17,17 @@ export class CalendarView extends ItemView {
 
     root: Root;
     state = {
-        date: new CalendarItem(moment())
+        date: new CalendarItem(myMoment())
     };
 
 
     constructor(leaf: WorkspaceLeaf) {
         super(leaf);
 
-        // Save the original locale
-        const originalLocale = moment.locale();
-
-        const firstDayOfWeek = getChronologySettings().firstDayOfWeek;
-        const obj = firstDayOfWeek>=0?
-        {
-            week: {
-                dow: firstDayOfWeek, // Monday is the first day of the week
-            }
-        }
-        :{};
-
-        // Create a custom locale where Monday is the first day of the week
-        moment.updateLocale('chronology-locale', obj);
-
-        // Use the custom locale for your instance
-        const myMoment = obj.week ? moment().locale('chronology-locale') : moment();
-
-        // Switch back to the original locale
-        moment.locale(originalLocale);
+        
 
         this.state = {
-            date: new CalendarItem(myMoment)
+            date: new CalendarItem(myMoment())
         };
         this.icon = "clock";
     }
