@@ -43,7 +43,7 @@ If your plugin does not need CSS, delete this file.
     /* font-weight: bold; */
 }
 
-.selected .chronology-calendar-weeknumber {
+.chronology-selected .chronology-calendar-weeknumber {
 
     color: var(--text-normal);
 }
@@ -63,16 +63,21 @@ If your plugin does not need CSS, delete this file.
 }
 
 
-.chronology-calendar-day.selected::before, .chronology-calendar-week-row.selected::before {
-    content: '';
-    display: block;
+.chronology-calendar-day.chronology-selected, 
+.chronology-calendar-week-row.chronology-selected {
+    /* content: ''; */
+    /* display: block;
     position: absolute;
     width: 100%;
     height: 100%;
-    top: 0;
+    top: 0; */
 
-    opacity: 0.25;
-    background-color: var(--text-accent-hover);
+    /* opacity: 0.25; */
+    /* background-color: var(--text-accent-hover); */
+    /* background-color: var(--theme-color-translucent-01); */
+    background-color: var(--interactive-accent-hover);
+
+    /* --theme-color-translucent-01 */
 }
 
 

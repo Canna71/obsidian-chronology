@@ -62,10 +62,10 @@ const Cell = ({ value, current, onChange }: CalendarCellProps) => {
         if (itemDate.isSame(myMoment(), "day")) classes.push("chronology-calendar-today");
 
         if (current.type === CalendarItemType.Day && itemDate.isSame(currendDate, "day")) {
-            classes.push("selected")
+            classes.push("chronology-selected")
         } 
         if(current.type === CalendarItemType.Range && current.isInRange(itemDate)){
-            classes.push("selected")
+            classes.push("chronology-selected")
         }
 
         const heatLevel = timeIndex.getHeatForDate(itemDate.format("YYYY-MM-DD"));
@@ -99,7 +99,7 @@ const Week = ({ week, current, onChange }: { week: number[], current: CalendarIt
     const weekClasses = ["chronology-calendar-week-row"];
 
     if (current.type === CalendarItemType.Week && current.date.week() === weekNumber) {
-        weekClasses.push("selected");
+        weekClasses.push("chronology-selected");
     }
 
     return (
@@ -177,12 +177,12 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
     const monthClasses = ["chronology-calendar-selectable"];
     if (current.type === CalendarItemType.Month) {
-        monthClasses.push("selected");
+        monthClasses.push("chronology-selected");
     }
 
     const yearClasses = [/*"chronology-calendar-selectable"*/];
     if (current.type === CalendarItemType.Year) {
-        yearClasses.push("selected");
+        yearClasses.push("chronology-selected");
     }
 
     return (
