@@ -26,12 +26,17 @@ export const NoteView = ({ item, onOpen, extraInfo = true }:
 
     const linkText = app.metadataCache.fileToLinktext(item.note, "/")
 
+    //
+    // copy from onInternalLinkMouseover
+
     const onHover = useCallback((e:React.MouseEvent) => {
         app.workspace.trigger("hover-link", {
-            event: e,
+            event: e.nativeEvent,
             hoverParent: document.body,
+            targetEl: e.currentTarget,
             linktext: linkText,
-            sourcePath: "/" 
+            source: "preview",
+            sourcePath: "/"
         })
         // app.workspace.trigger("link-hover", 
         //      e,
