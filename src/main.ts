@@ -12,6 +12,8 @@ interface ChronologyPluginSettings {
     useSimpleList: boolean;
     groupItemsInSameSlot: boolean;
     firstDayOfWeek: number;
+    creationDateAttribute?: string;
+    modifiedDateAttribute?: string;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
@@ -21,7 +23,9 @@ const DEFAULT_SETTINGS: ChronologyPluginSettings = {
     avgDailyNotes: 3,
     useSimpleList: false,
     groupItemsInSameSlot: false,
-    firstDayOfWeek: -1 // locale default
+    firstDayOfWeek: -1, // locale default
+    creationDateAttribute: "",
+    modifiedDateAttribute: ""
 }
 
 let expSettings: ChronologyPluginSettings;

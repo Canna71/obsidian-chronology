@@ -43,21 +43,47 @@ export class TimeIndex implements ITimeIndex {
         const { fromTime, toTime } = item.getTimeRange();
  
         let notes = allNotes.reduce<NoteAttributes[]>((acc, note) => {
-            const createdTime = moment(note.stat.ctime);
-            const modifiedTime = moment(note.stat.mtime);
+            let createdTime = moment(note.stat.ctime);
+            let modifiedTime = moment(note.stat.mtime);
+            const creationStr = getChronologySettings().creationDateAttribute;
+            const modifiedStr = getChronologySettings().modifiedDateAttribute;
+            if(creationStr || modifiedStr ){
+                const md = app.metadataCache.getFileCache(note);
+                if(md?.frontmatter){
+                    if(creationStr){
+                        const ctime = md.frontmatter[creationStr];
+                        if(ctime){
+                            createdTime = moment(ctime);
+                        }
+                    }
+                    if(modifiedStr){
+                        const mtime = md.frontmatter[modifiedStr];
+                        if(mtime){
+                            modifiedTime = moment(mtime);
+                        }
+                    }
+                }
+            }
 
             const matchCreated = createdTime.isBetween(fromTime, toTime);
             const matchModified = modifiedTime.isBetween(fromTime, toTime);
-            const timeDiffMs = Math.abs(note.stat.mtime - note.stat.ctime);
+            // use momentjs to find the time difference between createdTime and modifiedTime
+            const timeDiffMs = moment.duration(modifiedTime.diff(createdTime)).asMilliseconds();
+
+            // gets the createdTime as a number
+            const ctime = createdTime.valueOf();
+            const mtime = modifiedTime.valueOf();
+
+
             if (sortingStrategy === SortingStrategy.Mixed && matchCreated && matchModified && timeDiffMs > LIMIT_TIME_DIFF_MS) {
                 acc.push({
                     note,
-                    time: note.stat.ctime,
+                    time: ctime,
                     attribute: DateAttribute.Created
                 });
                 acc.push({
                     note,
-                    time: note.stat.mtime,
+                    time: mtime,
                     attribute: DateAttribute.Modified
                 });
                 return acc;
@@ -68,7 +94,7 @@ export class TimeIndex implements ITimeIndex {
             ) {
                 acc.push({
                     note,
-                    time: note.stat.ctime,
+                    time: ctime,
                     attribute: DateAttribute.Created
                 });
                 return acc;
@@ -78,7 +104,7 @@ export class TimeIndex implements ITimeIndex {
             ) {
                 acc.push({
                     note,
-                    time: note.stat.mtime,
+                    time: mtime,
                     attribute: DateAttribute.Modified
                 });
                 return acc

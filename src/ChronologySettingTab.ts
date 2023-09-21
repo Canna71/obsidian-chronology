@@ -92,6 +92,35 @@ export class ChronologySettingTab extends PluginSettingTab {
                 
                 
             })
+
+        // add setting for creation date attribute
+        new Setting(this.containerEl)
+            .setName("Creation Date Attribute")
+            .setDesc("The name of the metadata attribute to use for creation date")
+            .addText(cb=>{
+                cb
+                .setValue(this.plugin.settings.creationDateAttribute || "")
+                .onChange(async (value)=>{
+                    this.plugin.settings.creationDateAttribute = value;
+                    await this.plugin.saveSettings();
+                    // this.display();
+                })
+            })
+
+        // add setting for modified date attribute
+        new Setting(this.containerEl)
+            .setName("Modified Date Attribute")
+            .setDesc("The name of the metadata attribute to use for modified date")
+            .addText(cb=>{
+                cb
+                .setValue(this.plugin.settings.modifiedDateAttribute || "")
+                .onChange(async (value)=>{
+                    this.plugin.settings.modifiedDateAttribute = value;
+                    await this.plugin.saveSettings();
+                    // this.display();
+                })
+            })
+
     
 	}
 

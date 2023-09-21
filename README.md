@@ -23,4 +23,7 @@ In the calendar you can select the single days or the week number (on the left).
 
 The days tiles background gives an indication about how many notes were created or edited that day. The scale depends also on the average number of daily notes set in the settings.
 
-
+# Obsidian Sync Issues
+If you have Obsidian Sync, you might have noticed that synced file will have a creation timestamp corresponding to when they were synced to the other machines.
+In version 1.1.9 a couple of settings were added in order to work around this issue by (optionally) reading from the file metadata the actual creation date of the note.
+It is not mandatory that every note has a creation/modification date in the metadata, if it is missing the plugin will fallback to the file creation or modification date.
