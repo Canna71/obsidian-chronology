@@ -246,11 +246,13 @@ If your plugin does not need CSS, delete this file.
 }
 
 .chrono-badge.chrono-created {
-    background-color: var(--interactive-accent);
+    /* background-color: var(--interactive-accent); */
+    background-color: var(--color-green);
 }
 
 .chrono-badge.chrono-modified {
-    background-color: var(--text-selection);
+    /* background-color: var(--text-selection); */
+    background-color: var(--color-orange);
 }
 
 .chrono-notes-count {

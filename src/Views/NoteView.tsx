@@ -4,8 +4,8 @@ import { useCallback } from "react";
 import { DateAttribute, NoteAttributes } from "../TimeIndex";
 import { Badge } from "./TimeLine";
 
-export const NoteView = ({ item, onOpen, extraInfo=true }: 
-    { 
+export const NoteView = ({ item, onOpen, extraInfo = true }:
+    {
         item: NoteAttributes,
         onOpen: (note: TFile, paneType: PaneType | boolean) => void,
         extraInfo: boolean
@@ -24,15 +24,37 @@ export const NoteView = ({ item, onOpen, extraInfo=true }:
 
     const desc = `${item.attribute === DateAttribute.Created ? "Created" : "Modified"} ${time.format("LLL")}`;
 
-    return (
-        <div
-            data-text={desc}
-            className="chrono-temp-note"
-            onClick={onClick}
-            key={item.note.path}>
-            {extraInfo && time && <span className="chrono-note-time">{time.format("LT")}</span>}
-            {extraInfo && time && <Badge attribute={item.attribute} time={time} />}
-            {item.note.basename}
-        </div>
-    );
+    const linkText = app.metadataCache.fileToLinktext(item.note, "/")
+
+    const onHover = useCallback((e:React.MouseEvent) => {
+        app.workspace.trigger("hover-link", {
+            event: e,
+            hoverParent: document.body,
+            linktext: linkText,
+            sourcePath: "/" 
+        })
+        // app.workspace.trigger("link-hover", 
+        //      e,
+        //     document.body,
+        //     linkText,
+        //     "/" 
+        // })
+    }, [linkText])
+
+return (
+    <div
+        data-text={desc}
+        className="chrono-temp-note tree-item nav-file"
+        onClick={onClick}
+        key={item.note.path}
+        onMouseOver={onHover}
+    >
+        {extraInfo && time && <span className="chrono-note-time">{time.format("LT")}</span>}
+        {extraInfo && time && <Badge attribute={item.attribute} time={time} />}
+
+        <span className="chrono-note-name">{item.note.basename}</span>
+
+
+    </div>
+);
 };
