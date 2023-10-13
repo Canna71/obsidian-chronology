@@ -61,7 +61,7 @@ export class CalendarView extends ItemView {
     onVaultChanged = debounce((file: TFile) => {
         this.state = { ...this.state };
         this.render();
-    }, 300);
+    }, 5000);
 
     async onOpen() {
         const { contentEl } = this;
