@@ -14,6 +14,7 @@ interface ChronologyPluginSettings {
     firstDayOfWeek: number;
     creationDateAttribute?: string;
     modifiedDateAttribute?: string;
+    computeHeat?: boolean;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
@@ -25,7 +26,8 @@ const DEFAULT_SETTINGS: ChronologyPluginSettings = {
     groupItemsInSameSlot: false,
     firstDayOfWeek: -1, // locale default
     creationDateAttribute: "",
-    modifiedDateAttribute: ""
+    modifiedDateAttribute: "",
+    computeHeat: true
 }
 
 let expSettings: ChronologyPluginSettings;

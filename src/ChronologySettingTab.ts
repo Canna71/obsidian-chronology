@@ -121,6 +121,11 @@ export class ChronologySettingTab extends PluginSettingTab {
                 })
             })
 
+        // add seting for computeHeat
+        this.createToggle(containerEl, "Compute Heat",
+            "Compute heat for each day in the calendar",
+            "computeHeat"
+        );
     
 	}
 

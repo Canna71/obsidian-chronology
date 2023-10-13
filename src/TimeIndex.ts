@@ -41,7 +41,6 @@ export class TimeIndex implements ITimeIndex {
     getNotesForCalendarItem(item: CalendarItem, sortingStrategy = SortingStrategy.Mixed, desc = true): NoteAttributes[] {
         const allNotes = this.app.vault.getMarkdownFiles();
         const { fromTime, toTime } = item.getTimeRange();
- 
         let notes = allNotes.reduce<NoteAttributes[]>((acc, note) => {
             let createdTime = moment(note.stat.ctime);
             let modifiedTime = moment(note.stat.mtime);
@@ -161,7 +160,9 @@ export class TimeIndex implements ITimeIndex {
 
 
     getHeatForDate(date: string | moment.Moment): number {
+        if(!getChronologySettings().computeHeat) return 0;
         const mom = moment(date);
+
 
         const items = this.getNotesForCalendarItem(new CalendarItem(mom));
 
