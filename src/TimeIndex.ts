@@ -1,7 +1,7 @@
 import { getChronologySettings } from 'src/main';
 
 import { App, TFile, moment } from "obsidian";
-import { CalendarItem } from "./CalendarType";
+import { CalendarItem, CalendarItemType } from "./CalendarType";
 
 export interface ITimeIndex {
     getHeatForDate(date: string): number;
@@ -34,13 +34,30 @@ export class TimeIndex implements ITimeIndex {
 
     app: App;
 
+    index?: Map<string, NoteAttributes[]>;
+
     constructor(app: App) {
         this.app = app;
     } 
 
+    resetCache(){
+        this.index = undefined;
+    }
+
     getNotesForCalendarItem(item: CalendarItem, sortingStrategy = SortingStrategy.Mixed, desc = true): NoteAttributes[] {
         const allNotes = this.app.vault.getMarkdownFiles();
         const { fromTime, toTime } = item.getTimeRange();
+        const rebuildCache = !this.index;
+        if (!this.index) {
+            this.index = new Map<string, NoteAttributes[]>();
+        } else {
+            if (item.type === CalendarItemType.Day) {
+                const day = item.date.format("YYYY-MM-DD");
+                if (this.index.has(day)) {
+                    return this.index.get(day) as NoteAttributes[];
+                }
+            }
+        }
  
         let notes = allNotes.reduce<NoteAttributes[]>((acc, note) => {
             let createdTime = moment(note.stat.ctime);
@@ -65,6 +82,8 @@ export class TimeIndex implements ITimeIndex {
                 }
             }
 
+            
+
             const matchCreated = createdTime.isBetween(fromTime, toTime);
             const matchModified = modifiedTime.isBetween(fromTime, toTime);
             // use momentjs to find the time difference between createdTime and modifiedTime
@@ -74,39 +93,60 @@ export class TimeIndex implements ITimeIndex {
             const ctime = createdTime.valueOf();
             const mtime = modifiedTime.valueOf();
 
+            const createdInfo = {
+                note,
+                time: ctime,
+                attribute: DateAttribute.Created
+            };
+            const modifiedInfo = {
+                note,
+                time: mtime,
+                attribute: DateAttribute.Modified
+            };
+
+            if(rebuildCache && this.index){
+                // stores the note in the cache with an entry 
+                // for each day it was modified or created
+                const createdDate = createdTime.format("YYYY-MM-DD");
+                const modifiedDate = modifiedTime.format("YYYY-MM-DD");
+                if(!this.index.has(createdDate)){
+                    this.index.set(createdDate, []);
+                }
+                if(!this.index.has(modifiedDate)){
+                    this.index.set(modifiedDate, []);
+                }
+                
+                if(sortingStrategy === SortingStrategy.Mixed
+                    ||
+                    sortingStrategy === SortingStrategy.Created    
+                ) {
+                    this.index.get(createdDate)!.push(createdInfo);
+                }
+                if(sortingStrategy === SortingStrategy.Mixed
+                    ||
+                    sortingStrategy === SortingStrategy.Modified    
+                ) {
+                    this.index.get(modifiedDate)!.push(modifiedInfo);
+                }
+                
+            }
 
             if (sortingStrategy === SortingStrategy.Mixed && matchCreated && matchModified && timeDiffMs > LIMIT_TIME_DIFF_MS) {
-                acc.push({
-                    note,
-                    time: ctime,
-                    attribute: DateAttribute.Created
-                });
-                acc.push({
-                    note,
-                    time: mtime,
-                    attribute: DateAttribute.Modified
-                });
+                acc.push(createdInfo);
+                acc.push(modifiedInfo);
                 return acc;
             }
 
             if ((sortingStrategy === SortingStrategy.Mixed || sortingStrategy === SortingStrategy.Created)
                 && matchCreated
             ) {
-                acc.push({
-                    note,
-                    time: ctime,
-                    attribute: DateAttribute.Created
-                });
+                acc.push(createdInfo);
                 return acc;
             }
             if ((sortingStrategy === SortingStrategy.Mixed || sortingStrategy === SortingStrategy.Modified)
                 && matchModified
             ) {
-                acc.push({
-                    note,
-                    time: mtime,
-                    attribute: DateAttribute.Modified
-                });
+                acc.push(modifiedInfo);
                 return acc
             }
 
