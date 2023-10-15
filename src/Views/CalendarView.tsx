@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { debounce, moment, PaneType, TFile } from "obsidian";
+import { debounce, PaneType, TFile } from "obsidian";
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
 import { CalendarItem } from "src/CalendarType";
 import { ITimeIndex, MockTimeIndex, TimeIndex } from "src/TimeIndex";
 import { CalendarContainer } from "./CalendarContainer";
-import { getChronologySettings } from "src/main";
 import { myMoment } from "src/myMoment";
 export const CALENDAR_VIEW = "chronology-calendar-view";
 
