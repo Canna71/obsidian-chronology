@@ -47,16 +47,23 @@ export class TimeIndex implements ITimeIndex {
     getNotesForCalendarItem(item: CalendarItem, sortingStrategy = SortingStrategy.Mixed, desc = true): NoteAttributes[] {
         const allNotes = this.app.vault.getMarkdownFiles();
         const { fromTime, toTime } = item.getTimeRange();
-        const rebuildCache = !this.index;
+        let rebuildCache = false;
         if (!this.index) {
+            rebuildCache = true;
             this.index = new Map<string, NoteAttributes[]>();
         } else {
+            
             if (item.type === CalendarItemType.Day) {
                 const day = item.date.format("YYYY-MM-DD");
                 if (this.index.has(day)) {
-                    return this.index.get(day) as NoteAttributes[];
+                    const notes =  this.index.get(day) as NoteAttributes[];
+                    return this.sortNotes(notes, sortingStrategy, desc);
+                } else {
+                    return [];
                 }
             }
+
+
         }
  
         let notes = allNotes.reduce<NoteAttributes[]>((acc, note) => {
@@ -119,7 +126,7 @@ export class TimeIndex implements ITimeIndex {
                 if(sortingStrategy === SortingStrategy.Mixed
                     ||
                     sortingStrategy === SortingStrategy.Created    
-                ) {
+                ) { 
                     this.index.get(createdDate)!.push(createdInfo);
                 }
                 if(sortingStrategy === SortingStrategy.Mixed

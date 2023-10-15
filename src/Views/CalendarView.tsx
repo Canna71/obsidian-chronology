@@ -18,6 +18,7 @@ export class CalendarView extends ItemView {
     state = {
         date: new CalendarItem(myMoment())
     };
+    timeIndex: TimeIndex;
 
 
     constructor(leaf: WorkspaceLeaf) {
@@ -29,6 +30,7 @@ export class CalendarView extends ItemView {
             date: new CalendarItem(myMoment())
         };
         this.icon = "clock";
+        this.timeIndex = new TimeIndex(this.app)
     }
 
 
@@ -50,7 +52,7 @@ export class CalendarView extends ItemView {
 
         this.root.render(
             <React.StrictMode>
-                <TimeIndexContext.Provider value={new TimeIndex(this.app)}>
+                <TimeIndexContext.Provider value={this.timeIndex}>
                     <CalendarContainer onOpen={this.openNote.bind(this)} {...this.state} />
                 </TimeIndexContext.Provider>
             </React.StrictMode>
@@ -58,6 +60,7 @@ export class CalendarView extends ItemView {
     }
 
     onVaultChanged = debounce((file: TFile) => {
+        this.timeIndex.resetCache(); 
         this.state = { ...this.state };
         this.render();
     }, 5000);
