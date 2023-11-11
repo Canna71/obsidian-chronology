@@ -138,7 +138,6 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     for (let d = firstDayOGrid.clone(); d.isBefore(endofFirstWeek); d = d.add(1, "days")) {
         daysOfTheWeek.push(d.format("dd"));
     }
-    //console.log(`startWeek: ${startWeek} endWeek: ${endWeek}`)
 
     let w = [startYear, startWeek]; 
     const d = myMoment().year(w[0]).week(w[1]).startOf("week")

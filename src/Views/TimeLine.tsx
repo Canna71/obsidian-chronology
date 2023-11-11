@@ -111,7 +111,6 @@ export const TimeLine = ({ calItem, items, onOpen }:
         clusterStrat.clusters,
         clusterStrat.clusterFn
     );
-    // console.log(slotsWithData);
 
     return (
         <div className="chronology-timeline-container">
