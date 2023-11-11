@@ -20,6 +20,12 @@ If your plugin does not need CSS, delete this file.
     font-size: smaller;
     max-width: 20em;
     flex: 0;
+
+
+}
+
+.chronology-calendar-box table.chronology-calendar-grid {
+    min-width: initial;
 }
 
 .chronology-calendar-grid {
