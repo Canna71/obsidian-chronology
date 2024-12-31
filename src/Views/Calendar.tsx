@@ -140,7 +140,8 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     }
 
     let w = [startYear, startWeek]; 
-    const d = myMoment().year(w[0]).week(w[1]).startOf("week")
+    const d = myMoment().year(w[0]).startOf("year").week(w[1]).startOf("week")
+    // const d = myMoment([w[0]])startOf("year").week(w[1]).startOf("week");
     const monthRange = []
     while(d.isBefore(endOfMonth)) {
         monthRange.push(w);
