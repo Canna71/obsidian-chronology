@@ -88,7 +88,7 @@ const Week = ({ week, current, onChange }: { week: number[], current: CalendarIt
     const [year, weekNumber] = week;
     // const weekStart = current.date.clone().weekday(0).format("dddd"); 
     // const firstDayOfWeek = current.date.clone().day(weekStart).week(weekNumber).year(year);
-    const firstDayOfWeek = myMoment().year(year).week(weekNumber).startOf("week");
+    const firstDayOfWeek = myMoment().year(year).startOf("year").week(weekNumber).startOf("week");
     const lastDayOfWeek = firstDayOfWeek.clone().endOf("week");
  
     const weekRange: CalendarItem[] = [new CalendarItem(firstDayOfWeek.clone(), CalendarItemType.Week)];
@@ -121,7 +121,11 @@ const Week = ({ week, current, onChange }: { week: number[], current: CalendarIt
 export const Calendar = ({ current, onChange }: CalendarViewProps) => {
 
     const currentDate = current.date;
-    const isToday = currentDate.isSame(myMoment(),"day");
+    const today = myMoment();
+    // for testing: simluate a different today
+    // today = myMoment().year(2024).startOf("year").month(11).date(31); 
+    console.log("today", today.format("YYYY-MM-DD"));  
+    const isToday = currentDate.isSame(today,"day");
     const firstOfMonth = currentDate.clone().startOf("month");
     const endOfMonth = currentDate.clone().endOf("month");
     const monthName = currentDate.format("MMMM");
