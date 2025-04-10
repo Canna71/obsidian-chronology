@@ -124,7 +124,7 @@ export const Calendar = ({ current, onChange }: CalendarViewProps) => {
     const today = myMoment();
     // for testing: simluate a different today
     // today = myMoment().year(2024).startOf("year").month(11).date(31); 
-    console.log("today", today.format("YYYY-MM-DD"));  
+    // console.log("today", today.format("YYYY-MM-DD"));  
     const isToday = currentDate.isSame(today,"day");
     const firstOfMonth = currentDate.clone().startOf("month");
     const endOfMonth = currentDate.clone().endOf("month");
