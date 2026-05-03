@@ -57,6 +57,7 @@ export default class ChronologyPlugin extends Plugin {
 
         
         this.app.workspace.onLayoutReady(()=>{
+            this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
             if(this.settings.launchOnStartup){
                 this.activateView();
             }
@@ -90,7 +91,7 @@ export default class ChronologyPlugin extends Plugin {
     }
 
     onunload() {
-        // this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
+        this.app.workspace.detachLeavesOfType(CALENDAR_VIEW);
     }
 
     async loadSettings() {
