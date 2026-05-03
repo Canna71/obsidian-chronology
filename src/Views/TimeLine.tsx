@@ -64,7 +64,7 @@ export const ExpandableNoteList = ({ items, onOpen }: {
 }
 
 
-function groupByHour(items: NoteAttributes[]): { hour: string; items: NoteAttributes[] }[] {
+function groupByHour(items: NoteAttributes[], newestFirst: boolean): { hour: string; items: NoteAttributes[] }[] {
     const use24Hours = getChronologySettings().use24Hours;
     const hourFmt = use24Hours ? "HH" : "hh A";
     const slots = range(0, 23).map(n => moment().hour(n).startOf("hour").format(hourFmt));
@@ -75,7 +75,9 @@ function groupByHour(items: NoteAttributes[]): { hour: string; items: NoteAttrib
     const first = result.findIndex(s => s.items.length > 0);
     const last = result.length - [...result].reverse().findIndex(s => s.items.length > 0) - 1;
 
-    return first >= 0 ? result.slice(first, last + 1) : [];
+    if (first < 0) return [];
+    const sliced = result.slice(first, last + 1);
+    return newestFirst ? sliced.reverse() : sliced;
 }
 
 function getWeekClusteringStrategy() {
@@ -88,15 +90,16 @@ function getWeekClusteringStrategy() {
 }
 
 
-export const TimeLine = ({ calItem, items, onOpen }:
+export const TimeLine = ({ calItem, items, onOpen, newestFirst }:
     {
         calItem: CalendarItem,
         items: NoteAttributes[],
-        onOpen: (note: TFile, paneType: PaneType | boolean) => void
+        onOpen: (note: TFile, paneType: PaneType | boolean) => void,
+        newestFirst: boolean
     }) => {
 
     if (calItem.type === CalendarItemType.Day) {
-        const hourSlots = groupByHour(items);
+        const hourSlots = groupByHour(items, newestFirst);
         return (
             <div className="chronology-timeline-container">
                 {hourSlots.map(({ hour, items: slotItems }) => {

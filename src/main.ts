@@ -15,6 +15,7 @@ interface ChronologyPluginSettings {
     creationDateAttribute?: string;
     modifiedDateAttribute?: string;
     computeHeat?: boolean;
+    newestFirst: boolean;
 }
 
 const DEFAULT_SETTINGS: ChronologyPluginSettings = {
@@ -27,18 +28,22 @@ const DEFAULT_SETTINGS: ChronologyPluginSettings = {
     firstDayOfWeek: -1, // locale default
     creationDateAttribute: "",
     modifiedDateAttribute: "",
-    computeHeat: true
+    computeHeat: true,
+    newestFirst: true
 }
 
 let expSettings: ChronologyPluginSettings;
+let pluginInstance: ChronologyPlugin;
 
 export function getChronologySettings(){return expSettings;}
+export function saveChronologySettings(){pluginInstance?.saveSettings();}
 
 export default class ChronologyPlugin extends Plugin {
     settings: ChronologyPluginSettings;
     ribbonIconEl: HTMLElement | null;
 
     async onload() {
+        pluginInstance = this;
         await this.loadSettings();
 
         this.registerView(

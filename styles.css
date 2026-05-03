@@ -122,6 +122,35 @@ If your plugin does not need CSS, delete this file.
     /* color:  var(--interactive-accent); */
 }
 
+.chrono-notes-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+}
+
+.chrono-sort-toggle {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    z-index: 2;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-faint);
+    font-size: 0.8em;
+    padding: 1px 3px;
+    border-radius: 3px;
+    line-height: 1;
+}
+
+.chrono-sort-toggle:hover {
+    color: var(--text-muted);
+    background: var(--background-modifier-hover);
+}
+
 .chronology-timeline-container {
     overflow-y: auto;
     flex: 1;
