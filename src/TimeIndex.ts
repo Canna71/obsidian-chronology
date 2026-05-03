@@ -5,7 +5,7 @@ import { CalendarItem, CalendarItemType } from "./CalendarType";
 
 export interface ITimeIndex {
     getHeatForDate(date: string): number;
-    getNotesForCalendarItem(item: CalendarItem): NoteAttributes[];
+    getNotesForCalendarItem(item: CalendarItem, sortingStrategy?: SortingStrategy, desc?: boolean): NoteAttributes[];
 }
 
 export enum DateAttribute {

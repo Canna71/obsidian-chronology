@@ -64,29 +64,28 @@ export const ExpandableNoteList = ({ items, onOpen }: {
 }
 
 
-function getClusteringStrategy() {
+function groupByHour(items: NoteAttributes[]): { hour: string; items: NoteAttributes[] }[] {
+    const use24Hours = getChronologySettings().use24Hours;
+    const hourFmt = use24Hours ? "HH" : "hh A";
+    const slots = range(0, 23).map(n => moment().hour(n).startOf("hour").format(hourFmt));
+    const grouped = groupBy(items, item => moment(item.time).format(hourFmt));
 
+    let result = slots.map(hour => ({ hour, items: (grouped[hour] || []) as NoteAttributes[] }));
 
-    const clusteringStrategies = {
-            [CalendarItemType.Day]: {
-                slots: range(0, 23).reverse().map(n => moment().hour(n).format(getChronologySettings().use24Hours?"HH":"hh A")),
-                clusters: range(0, 5).reverse().map(s => (s * 10).toString()),
-                slotFn: (item: NoteAttributes) => moment(item.time).format(getChronologySettings().use24Hours?"HH":"hh A"),
-                clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).minutes() / 10) * 10).toString()
-            },
-            [CalendarItemType.Week]: {
-                slots: moment.weekdaysShort(true),
-                clusters: range(0, 5).reverse().map(s => (s * 4).toString()), 
-                slotFn: (item: NoteAttributes) => moment.weekdaysShort()[moment(item.time).day()],
-                clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).hours()/4)*4).toString()
-            },
-            [CalendarItemType.Month]: undefined,
-            [CalendarItemType.Year]: undefined,
-        }
-    
-    return clusteringStrategies;
+    const first = result.findIndex(s => s.items.length > 0);
+    const last = result.length - [...result].reverse().findIndex(s => s.items.length > 0) - 1;
+
+    return first >= 0 ? result.slice(first, last + 1) : [];
 }
 
+function getWeekClusteringStrategy() {
+    return {
+        slots: moment.weekdaysShort(true),
+        clusters: range(0, 5).reverse().map(s => (s * 4).toString()),
+        slotFn: (item: NoteAttributes) => moment.weekdaysShort()[moment(item.time).day()],
+        clusterFn: (item: NoteAttributes) => (Math.floor(moment(item.time).hours() / 4) * 4).toString()
+    };
+}
 
 
 export const TimeLine = ({ calItem, items, onOpen }:
@@ -96,44 +95,58 @@ export const TimeLine = ({ calItem, items, onOpen }:
         onOpen: (note: TFile, paneType: PaneType | boolean) => void
     }) => {
 
-    if(calItem.type == CalendarItemType.Range) return (<div></div>);    
-    
-    const clusterStrat = getClusteringStrategy()[calItem.type];
-    if(!clusterStrat){
+    if (calItem.type === CalendarItemType.Day) {
+        const hourSlots = groupByHour(items);
         return (
-            <div></div>
+            <div className="chronology-timeline-container">
+                {hourSlots.map(({ hour, items: slotItems }) => {
+                    const hasItems = slotItems.length > 0;
+                    return (
+                        <div key={hour} className={`chrono-temp-slot1${hasItems ? "" : " chrono-temp-slot1-empty"}`}>
+                            <div className="chrono-temp-slot1-info">
+                                <div className="chrono-temp-slot1-name">{hour}</div>
+                            </div>
+                            {hasItems && (
+                                <div className="chrono-temp-slot1-content">
+                                    {slotItems.map(item =>
+                                        <NoteView key={item.note.path + item.attribute} item={item} onOpen={onOpen} extraInfo={true} />
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
         );
     }
 
-    const slotsWithData = clusterize(items,
-        clusterStrat.slots,
-        clusterStrat.slotFn,
-        clusterStrat.clusters,
-        clusterStrat.clusterFn
-    );
-
-    return (
-        <div className="chronology-timeline-container">
-            {slotsWithData.map(({ slot, clusters }, slotNmber) => {
-                const hasItems = clusters.some(({ items }) => items && items.length > 0);
-                return (
-                    <div key={slot} className={`chrono-temp-slot1${hasItems ? "" : " chrono-temp-slot1-empty"}`}>
-                        <div className="chrono-temp-slot1-info">
-                            <div className="chrono-temp-slot1-name">{slot}</div>
-                        </div>
-                        {hasItems && (
-                            <div className="chrono-temp-slot1-content">
-                                {clusters.map(
-                                    ({ cluster, items }) =>
-                                        <ExpandableNoteList key={cluster} items={items} onOpen={onOpen} />
-                                )}
+    if (calItem.type === CalendarItemType.Week) {
+        const strat = getWeekClusteringStrategy();
+        const slotsWithData = clusterize(items, strat.slots, strat.slotFn, strat.clusters, strat.clusterFn);
+        return (
+            <div className="chronology-timeline-container">
+                {slotsWithData.map(({ slot, clusters }) => {
+                    const hasItems = clusters.some(({ items }) => items && items.length > 0);
+                    return (
+                        <div key={slot} className={`chrono-temp-slot1${hasItems ? "" : " chrono-temp-slot1-empty"}`}>
+                            <div className="chrono-temp-slot1-info">
+                                <div className="chrono-temp-slot1-name">{slot}</div>
                             </div>
-                        )}
-                    </div>
-                );
-            })}
-        </div>
-    );
+                            {hasItems && (
+                                <div className="chrono-temp-slot1-content">
+                                    {clusters.map(({ cluster, items }) =>
+                                        <ExpandableNoteList key={cluster} items={items} onOpen={onOpen} />
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
+
+    return <div></div>;
 }
 
 

@@ -134,15 +134,8 @@ If your plugin does not need CSS, delete this file.
 
 .chrono-temp-slot1 {
     display: flex;
-    height: 157px;
-    overflow-y: hidden;
-    border-top: 1px solid var(--background-modifier-border);
-}
-
-.chrono-temp-slot1.chrono-temp-slot1-empty {
-    height: auto;
     min-height: 22px;
-    overflow-y: visible;
+    border-top: 1px solid var(--background-modifier-border);
 }
 
 .chrono-temp-slot1-info {
@@ -162,12 +155,6 @@ If your plugin does not need CSS, delete this file.
 .chrono-temp-slot1-content {
     flex: 1;
     margin-left: 2pt;
-    /* margin-top: 5pt; */
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* justify-content: flex-end; */
-    overflow-y: auto;
-    
     overflow-x: hidden;
     padding: 2px;
 }

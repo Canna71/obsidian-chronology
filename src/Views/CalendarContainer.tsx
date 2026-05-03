@@ -4,6 +4,7 @@ import * as React from "react";
 import { useCallback } from "react";
 import { CalendarItem, CalendarItemType } from "src/CalendarType";
 import { getChronologySettings } from "src/main";
+import { SortingStrategy } from "src/TimeIndex";
 import { Calendar } from "./Calendar";
 import { TimeIndexContext } from "./CalendarView";
 import { TimeLine } from "./TimeLine"
@@ -15,12 +16,15 @@ export interface CalendarContainerProps {
 
 
 
-export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => { 
+export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 
 	const timeIndex = React.useContext(TimeIndexContext);
 	const [current, setDate] = React.useState(date);
-    
-    const notes = timeIndex.getNotesForCalendarItem(current);
+
+    const isDay = current.type === CalendarItemType.Day;
+    const notes = isDay
+        ? timeIndex.getNotesForCalendarItem(current, SortingStrategy.Mixed, false)
+        : timeIndex.getNotesForCalendarItem(current);
 
 	const handleChange = useCallback(
 		(value:CalendarItem, isDelta: boolean) => {
@@ -36,7 +40,7 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
 	)
 
     const settings = getChronologySettings();
-    
+
     const useList = settings.useSimpleList || current.type == CalendarItemType.Month || current.type == CalendarItemType.Range;
 
     const handleOpen = useCallback((note:TFile, paneType: PaneType | boolean)=>{
@@ -52,7 +56,7 @@ export const CalendarContainer = ({date, onOpen}:CalendarContainerProps) => {
             :
             <TimeLine calItem={current} items={notes} onOpen={handleOpen} />
         }
-            
+
 
 		</div>
 	)
