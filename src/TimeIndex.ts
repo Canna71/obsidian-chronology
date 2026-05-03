@@ -77,13 +77,15 @@ export class TimeIndex implements ITimeIndex {
                     if(creationStr){
                         const ctime = md.frontmatter[creationStr];
                         if(ctime){
-                            createdTime = moment(ctime);
+                            const parsed = moment(ctime, moment.ISO_8601, true);
+                            if(parsed.isValid()) createdTime = parsed;
                         }
                     }
                     if(modifiedStr){
                         const mtime = md.frontmatter[modifiedStr];
                         if(mtime){
-                            modifiedTime = moment(mtime);
+                            const parsed = moment(mtime, moment.ISO_8601, true);
+                            if(parsed.isValid()) modifiedTime = parsed;
                         }
                     }
                 }
