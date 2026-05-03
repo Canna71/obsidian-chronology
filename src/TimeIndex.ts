@@ -45,7 +45,7 @@ export class TimeIndex implements ITimeIndex {
     }
 
     getNotesForCalendarItem(item: CalendarItem, sortingStrategy = SortingStrategy.Mixed, desc = true): NoteAttributes[] {
-        const allNotes = this.app.vault.getMarkdownFiles();
+        const allNotes = this.app.vault.getFiles().filter(f => f.extension === 'md' || f.extension === 'canvas');
         const { fromTime, toTime } = item.getTimeRange();
         let rebuildCache = false;
         if (!this.index) {
