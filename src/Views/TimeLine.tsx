@@ -114,23 +114,24 @@ export const TimeLine = ({ calItem, items, onOpen }:
 
     return (
         <div className="chronology-timeline-container">
-            {slotsWithData.map(({ slot, clusters }, slotNmber) =>
-                <div key={slot} className="chrono-temp-slot1">
-
-
-                    <div className="chrono-temp-slot1-info">
-                        <div className="chrono-temp-slot1-name">{slot}</div>
-                    </div>
-                    <div className="chrono-temp-slot1-content">
-                        {clusters.map(
-                            ({ cluster, items }) =>
-                                <ExpandableNoteList key={cluster} items={items} onOpen={onOpen} />
+            {slotsWithData.map(({ slot, clusters }, slotNmber) => {
+                const hasItems = clusters.some(({ items }) => items && items.length > 0);
+                return (
+                    <div key={slot} className={`chrono-temp-slot1${hasItems ? "" : " chrono-temp-slot1-empty"}`}>
+                        <div className="chrono-temp-slot1-info">
+                            <div className="chrono-temp-slot1-name">{slot}</div>
+                        </div>
+                        {hasItems && (
+                            <div className="chrono-temp-slot1-content">
+                                {clusters.map(
+                                    ({ cluster, items }) =>
+                                        <ExpandableNoteList key={cluster} items={items} onOpen={onOpen} />
+                                )}
+                            </div>
                         )}
                     </div>
-
-
-                </div>
-            )}
+                );
+            })}
         </div>
     );
 }
