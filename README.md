@@ -21,6 +21,8 @@ Clicking on the name of the note will open it. Ctrl-(or Command-) clicking the n
 
 In the calendar you can select the single days or the week number (on the left).
 
+Holding **Ctrl** (or **Cmd** on Mac) while hovering over a day shows a preview of the corresponding daily note. Ctrl-(or Cmd-) clicking a day navigates to that daily note directly (respecting your Daily Notes plugin folder and date format settings).
+
 The days tiles background gives an indication about how many notes were created or edited that day. The scale depends also on the average number of daily notes set in the settings.
 
 # Obsidian Sync Issues
