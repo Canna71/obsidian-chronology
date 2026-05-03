@@ -37,6 +37,36 @@ const Cell = ({ value, current, onChange }: CalendarCellProps) => {
         [value],
     )
 
+    const hoverTriggered = React.useRef(false);
+
+    const onMouseMove = useCallback((e: React.MouseEvent<HTMLTableCellElement>) => {
+        if (!e.ctrlKey && !e.metaKey) {
+            hoverTriggered.current = false;
+            return;
+        }
+        if (hoverTriggered.current) return;
+        hoverTriggered.current = true;
+
+        const dailyNotes = (app as any).internalPlugins?.getPluginById?.('daily-notes');
+        const format: string = dailyNotes?.instance?.options?.format || 'YYYY-MM-DD';
+        const folder: string = (dailyNotes?.instance?.options?.folder || '').trim();
+        const name = value.date.format(format);
+        const linktext = folder ? `${folder}/${name}` : name;
+
+        app.workspace.trigger('hover-link', {
+            event: e.nativeEvent,
+            hoverParent: document.body,
+            targetEl: e.currentTarget,
+            linktext,
+            source: 'preview',
+            sourcePath: '/',
+        });
+    }, [value.date]);
+
+    const onMouseLeave = useCallback(() => {
+        hoverTriggered.current = false;
+    }, []);
+
 
     const itemDate = value.date;
     const currendDate = current.date;
@@ -73,10 +103,13 @@ const Cell = ({ value, current, onChange }: CalendarCellProps) => {
         const height = `${percentage}%`;
 
         return (
-            <td key={itemDate.dayOfYear()} className={classes.join(" ")} onClick={handleChange}>
+            <td key={itemDate.dayOfYear()} className={classes.join(" ")}
+                onClick={handleChange}
+                onMouseMove={onMouseMove}
+                onMouseLeave={onMouseLeave}
+            >
                 <div className="chronology-calendar-heat-background" style={{ height }}></div>
                 <span>{itemDate.date()}</span>
-
             </td>
         )
     }
